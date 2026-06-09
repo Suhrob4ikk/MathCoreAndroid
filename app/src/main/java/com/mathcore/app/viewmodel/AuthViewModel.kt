@@ -1,16 +1,17 @@
 package com.mathcore.app.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mathcore.app.data.model.Profile
 import com.mathcore.app.data.repository.AuthRepository
 import com.mathcore.app.data.repository.SessionManager
 import com.mathcore.app.data.repository.friendlyAuthError
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class AuthUiState(
     val isLoading: Boolean = false,
@@ -20,8 +21,10 @@ data class AuthUiState(
     val currentProfile: Profile? = null
 )
 
-class AuthViewModel(app: Application) : AndroidViewModel(app) {
-    private val repo = AuthRepository(app.applicationContext)
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val repo: AuthRepository
+) : ViewModel() {
 
     // Восстанавливаем профиль из кэша сразу — не ждём сети.
     // Иначе при запуске показывается "Студент" пока идёт загрузка.

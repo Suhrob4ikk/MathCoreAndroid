@@ -3,7 +3,9 @@ package com.mathcore.app
 import android.app.Application
 import com.mathcore.app.data.repository.SessionManager
 import com.mathcore.app.util.AppHttpClient
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class MathCoreApp : Application() {
     override fun onCreate() {
         super.onCreate()

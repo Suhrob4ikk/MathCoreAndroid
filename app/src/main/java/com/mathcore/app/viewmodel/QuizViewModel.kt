@@ -5,9 +5,11 @@ import com.mathcore.app.data.Question
 import com.mathcore.app.data.QuizConfig
 import com.mathcore.app.data.QuizResult
 import com.mathcore.app.data.normalizeAnswer
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import javax.inject.Inject
 
 data class QuizUiState(
     val questions: List<Question> = emptyList(),
@@ -33,7 +35,8 @@ data class QuizUiState(
     val currentOpenAnswer: String? get() = openAnswers.getOrNull(currentIndex)
 }
 
-class QuizViewModel : ViewModel() {
+@HiltViewModel
+class QuizViewModel @Inject constructor() : ViewModel() {
 
     private val _uiState = MutableStateFlow(QuizUiState())
     val uiState: StateFlow<QuizUiState> = _uiState.asStateFlow()

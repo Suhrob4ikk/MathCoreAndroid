@@ -14,7 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.mathcore.app.data.Difficulty
 import com.mathcore.app.data.QuizConfig
 import com.mathcore.app.data.QuizResult
@@ -43,10 +43,12 @@ import com.mathcore.app.ui.search.UserProfileScreen
 import com.mathcore.app.ui.stats.StatsScreen
 import com.mathcore.app.ui.theory.TheoryScreen
 import com.mathcore.app.ui.theme.MathCoreTheme
+import com.mathcore.app.viewmodel.AppViewModel
 import com.mathcore.app.viewmodel.AuthViewModel
 import com.mathcore.app.viewmodel.DuelViewModel
 import com.mathcore.app.viewmodel.ExamViewModel
 import com.mathcore.app.viewmodel.QuizViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -65,37 +67,51 @@ sealed class Screen {
     data class Theory(val subject: Subject) : Screen()
 }
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val repo = QuestionRepository(this)
-        val prefs = PreferencesManager(this)
-        val resultsRepo = ResultsRepository()
-        setContent {
-            val isDark by prefs.darkTheme.collectAsStateWithLifecycle(isSystemInDarkTheme())
-            MathCoreTheme(darkTheme = isDark) {
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    MathCoreApp(repo, prefs, resultsRepo, isDark)
-                }
-            }
+        // [А-1] All dependencies provided by Hilt — no manual construction here.
+        setContent { MathCoreContent() }
+    }
+}
+
+/**
+ * [А-1] Public entry point — handles Hilt injection, theme, and surface.
+ * All state lives in MathCoreBody which receives the deps as plain params
+ * so the composable tree is stable across recompositions.
+ */
+@Composable
+fun MathCoreContent() {
+    val appViewModel: AppViewModel = hiltViewModel()
+    val prefs = appViewModel.prefs
+    val repo = appViewModel.questionRepo
+    val resultsRepo = appViewModel.resultsRepo
+    val mistakesRepo = appViewModel.mistakesRepo
+    val authRepo = appViewModel.authRepo
+    val isDark by prefs.darkTheme.collectAsStateWithLifecycle(isSystemInDarkTheme())
+    MathCoreTheme(darkTheme = isDark) {
+        Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+            MathCoreBody(repo, prefs, resultsRepo, mistakesRepo, isDark, authRepo)
         }
     }
 }
 
 @Composable
-fun MathCoreApp(
+private fun MathCoreBody(
     repo: QuestionRepository,
     prefs: PreferencesManager,
     resultsRepo: ResultsRepository,
-    isDark: Boolean = false
+    mistakesRepo: MistakesRepository,
+    isDark: Boolean,
+    authRepo: AuthRepository
 ) {
     var screen by remember { mutableStateOf<Screen>(Screen.Auth) }
-    val quizViewModel: QuizViewModel = viewModel()
-    val examViewModel: ExamViewModel = viewModel()
-    val authViewModel: AuthViewModel = viewModel()
-    val duelViewModel: DuelViewModel = viewModel()
-    val mistakesRepo = remember { MistakesRepository() }
+    val quizViewModel: QuizViewModel = hiltViewModel()
+    val examViewModel: ExamViewModel = hiltViewModel()
+    val authViewModel: AuthViewModel = hiltViewModel()
+    val duelViewModel: DuelViewModel = hiltViewModel()
     val quizState by quizViewModel.uiState.collectAsState()
     val authState by authViewModel.uiState.collectAsState()
     val xp by prefs.xp.collectAsStateWithLifecycle(0)
@@ -181,9 +197,8 @@ fun MathCoreApp(
     var selectedUserResults by remember { mutableStateOf<List<TestResult>>(emptyList()) }
     var selectedUserInfo by remember { mutableStateOf<com.mathcore.app.data.model.PublicUserInfo?>(null) }
 
-    // Avatar upload
+    // Avatar upload — authRepo injected via AppViewModel (Hilt singleton)
     val context = LocalContext.current
-    val authRepo = remember { AuthRepository(context) }
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
@@ -330,23 +345,31 @@ fun MathCoreApp(
                                     prefs.setDailyCompleted(result.percentage)
                                 }
                                 // computeXp = единая формула (XpUtils.kt); +50 за ежедневный вызов
+                                // XP добавляется локально для мгновенного UI-обновления;
+                                // при следующем входе БД синхронизирует итоговое значение.
                                 val xpGain = computeXp(
                                     result.correctCount,
                                     result.config.difficulty.name,
                                     result.percentage
                                 ) + if (result.config.isDailyChallenge) 50 else 0
                                 prefs.addXP(xpGain)
+                                // [КРИТ-2] Отправляем сырые ответы на Edge Function —
+                                // сервер сам считает score/correctAnswers и делает INSERT.
                                 if (user != null) {
-                                    resultsRepo.saveResult(
-                                        TestResult(
-                                            userId = user.id,
-                                            username = user.username,
-                                            section = section,
-                                            difficulty = difficulty,
-                                            score = result.percentage,
-                                            correctAnswers = result.correctCount,
-                                            totalQuestions = result.totalCount
-                                        )
+                                    resultsRepo.submitTestResult(
+                                        questions      = result.questions,
+                                        userAnswers    = result.userAnswers,
+                                        openAnswers    = result.openAnswers,
+                                        section        = section,
+                                        difficulty     = difficulty,
+                                        username       = user.username,
+                                        dailyDate      = if (result.config.isDailyChallenge)
+                                                             java.time.LocalDate.now().toString()
+                                                         else null,
+                                        duelSection    = if (wasDuel)
+                                                             result.config.subject.name.lowercase()
+                                                         else null,
+                                        duelDifficulty = if (wasDuel) difficulty else null
                                     )
                                 }
                             }

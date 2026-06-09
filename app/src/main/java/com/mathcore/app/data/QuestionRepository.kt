@@ -427,25 +427,6 @@ class QuestionRepository(private val context: Context) {
         }
     }
 
-    /** Matches JavaScript's hashCode(str) — 32-bit multiply-accumulate. */
-    private fun webHashCode(str: String): Int {
-        var h = 0
-        for (c in str) h = 31 * h + c.code
-        return h
-    }
-
-    /** Matches JavaScript's mulberry32(seed) PRNG bit-for-bit. */
-    private fun mulberry32(initialSeed: Int): () -> Double {
-        var seed = initialSeed
-        return {
-            seed += 0x6D2B79F5.toInt()
-            var t = (seed xor (seed ushr 15)) * (1 or seed)
-            t = (t + ((t xor (t ushr 7)) * (61 or t))) xor t
-            t = t xor (t ushr 14)  // final avalanche step — was missing, caused wrong daily questions
-            t.toUInt().toLong().toDouble() / 4294967296.0
-        }
-    }
-
     // ── Fallback questions ─────────────────────────────────────────────────────
 
     private fun getLinalgFallback(difficulty: Difficulty) = when (difficulty) {

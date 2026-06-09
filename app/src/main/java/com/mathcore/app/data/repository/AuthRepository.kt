@@ -113,6 +113,8 @@ class AuthRepository(private val context: Context) {
     }
 
     suspend fun signOut() {
+        // [БАГ-7] Leave presence channel before clearing session tokens.
+        PresenceManager.untrack()
         try { AppHttpClient.authenticated.post("${SupabaseConfig.AUTH_URL}/logout") }
         catch (_: Exception) {}
         SessionManager.clearAndSave(context)
@@ -147,6 +149,8 @@ class AuthRepository(private val context: Context) {
         SessionManager.username     = username
         SessionManager.email        = email
         SessionManager.save(context)    // ← сохраняем на диск для авто-входа
+        // [БАГ-7] Join Supabase Realtime presence channel so web knows Android is active.
+        PresenceManager.track(userId, username)
     }
 
     suspend fun updateLastSeen() {

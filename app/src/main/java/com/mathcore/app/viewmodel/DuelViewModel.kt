@@ -1,7 +1,6 @@
 package com.mathcore.app.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mathcore.app.data.Difficulty
 import com.mathcore.app.data.Question
@@ -12,12 +11,14 @@ import com.mathcore.app.data.repository.ResultsRepository
 import com.mathcore.app.data.repository.SupabaseConfig
 import com.mathcore.app.data.repository.json
 import com.mathcore.app.util.AppHttpClient
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.plugins.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
+import javax.inject.Inject
 
 // ── Phases ────────────────────────────────────────────────────────────────────
 enum class DuelPhase {
@@ -57,16 +58,17 @@ data class DuelUiState(
 )
 
 // ── ViewModel ─────────────────────────────────────────────────────────────────
-class DuelViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class DuelViewModel @Inject constructor(
+    private val questionRepo: QuestionRepository,
+    private val resultsRepo:  ResultsRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DuelUiState())
     val uiState: StateFlow<DuelUiState> = _uiState.asStateFlow()
 
     private val _userSuggestions = MutableStateFlow<List<PublicUserInfo>>(emptyList())
     val userSuggestions: StateFlow<List<PublicUserInfo>> = _userSuggestions.asStateFlow()
-
-    private val questionRepo = QuestionRepository(application)
-    private val resultsRepo  = ResultsRepository()
 
     private var searchJob: Job? = null
     private var inviteJob: Job? = null

@@ -1,7 +1,6 @@
 package com.mathcore.app.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mathcore.app.data.Difficulty
 import com.mathcore.app.data.ExamResult
@@ -9,6 +8,7 @@ import com.mathcore.app.data.ExamType
 import com.mathcore.app.data.Question
 import com.mathcore.app.data.QuestionRepository
 import com.mathcore.app.data.Subject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 data class ExamUiState(
     val examType: ExamType? = null,
@@ -42,13 +43,10 @@ data class ExamUiState(
     }
 }
 
-class ExamViewModel(application: Application) : AndroidViewModel(application) {
-
-    /**
-     * Repository created once inside the ViewModel so question loading can be
-     * dispatched to the IO thread — no more asset reads on the main thread.
-     */
-    private val questionRepo = QuestionRepository(application)
+@HiltViewModel
+class ExamViewModel @Inject constructor(
+    private val questionRepo: QuestionRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ExamUiState())
     val uiState: StateFlow<ExamUiState> = _uiState.asStateFlow()

@@ -1,6 +1,9 @@
 package com.mathcore.app.data.repository
 
 import android.content.Context
+import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.mathcore.app.BuildConfig
 import kotlinx.serialization.json.Json
 
@@ -32,7 +35,7 @@ object SessionManager {
     var username:     String? = null
     var email:        String? = null
 
-    private const val PREFS = "mathcore_session"
+    private const val PREFS = "mathcore_session_enc"
 
     /**
      * Stored on [init] so [updateToken] can persist refreshed tokens without
@@ -40,20 +43,48 @@ object SessionManager {
      */
     private var appContext: Context? = null
 
+    /**
+     * Returns an EncryptedSharedPreferences instance backed by AES256-GCM.
+     * Falls back to plain SharedPreferences if the device doesn't support the
+     * required key scheme (very rare; only affects old API 23 devices without HSM).
+     */
+    private fun prefs(context: Context): SharedPreferences {
+        return try {
+            val masterKey = MasterKey.Builder(context.applicationContext)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
+            EncryptedSharedPreferences.create(
+                context.applicationContext,
+                PREFS,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (_: Exception) {
+            // Extremely rare fallback — device keystore unavailable
+            context.applicationContext.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        }
+    }
+
     /** Restore session on app start. Call from Application.onCreate(). */
     fun init(context: Context) {
         appContext = context.applicationContext
-        val p = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val p = prefs(context)
         accessToken  = p.getString("access_token",  null)
         refreshToken = p.getString("refresh_token", null)
         userId       = p.getString("user_id",       null)
         username     = p.getString("username",      null)
         email        = p.getString("email",         null)
+        // [БАГ-7] Re-join Realtime presence channel on session restore (cold start / process kill).
+        // Ensures web's setupSessionGuard() sees the Android session even after app restart.
+        if (isLoggedIn()) {
+            PresenceManager.track(userId!!, username ?: "unknown")
+        }
     }
 
     /** Persist session to disk. Call after a successful sign-in. */
     fun save(context: Context) {
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().apply {
+        prefs(context).edit().apply {
             putString("access_token",  accessToken)
             putString("refresh_token", refreshToken)
             putString("user_id",       userId)
@@ -66,25 +97,25 @@ object SessionManager {
     /** Clear session on sign-out. */
     fun clearAndSave(context: Context) {
         clear()
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().clear().apply()
+        prefs(context).edit().clear().apply()
     }
 
     fun isLoggedIn() = !accessToken.isNullOrBlank() && !userId.isNullOrBlank()
 
     /**
-     * BUG-CRIT-4 FIX: Update the in-memory token after a successful refresh.
-     * Also persists the new tokens to SharedPreferences immediately so they
-     * survive a process kill between refreshes. The appContext stored in [init]
-     * is the applicationContext — safe to hold statically.
+     * Update the in-memory token after a successful refresh.
+     * Also persists the new tokens immediately so they survive a process kill.
+     * The appContext stored in [init] is the applicationContext — safe to hold statically.
      */
     fun updateToken(newAccess: String, newRefresh: String? = null) {
         accessToken = newAccess
         if (newRefresh != null) refreshToken = newRefresh
-        // Persist immediately — avoids extra network round-trip after process restart
-        appContext?.getSharedPreferences(PREFS, Context.MODE_PRIVATE)?.edit()?.apply {
-            putString("access_token", newAccess)
-            if (newRefresh != null) putString("refresh_token", newRefresh)
-            apply()
+        appContext?.let { ctx ->
+            prefs(ctx).edit().apply {
+                putString("access_token", newAccess)
+                if (newRefresh != null) putString("refresh_token", newRefresh)
+                apply()
+            }
         }
     }
 
