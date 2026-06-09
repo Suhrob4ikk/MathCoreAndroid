@@ -194,10 +194,13 @@ class DuelViewModel(application: Application) : AndroidViewModel(application) {
         myName = name
         myRole = "guest"
         _uiState.update { it.copy(phase = DuelPhase.WAITING, code = code) }
-        viewModelScope.launch { connectWS(code) }
+        // Send "join" from INSIDE connectWS so wsSession is guaranteed non-null.
+        // The old approach (separate coroutine + fixed 800 ms delay) was a race
+        // condition: wsSession could still be null when sendBroadcast ran.
         viewModelScope.launch {
-            delay(800)
-            sendBroadcast("join", buildJsonObject { put("name", name) })
+            connectWS(code, onConnected = {
+                sendBroadcast("join", buildJsonObject { put("name", name) })
+            })
         }
     }
 
@@ -294,7 +297,7 @@ class DuelViewModel(application: Application) : AndroidViewModel(application) {
 
     // ── WebSocket helpers ──────────────────────────────────────────────────────
 
-    private suspend fun connectWS(code: String) {
+    private suspend fun connectWS(code: String, onConnected: (suspend () -> Unit)? = null) {
         wsChannelCode = code   // fix duelTopic for this channel
         try {
             AppHttpClient.authenticated.webSocket(
@@ -307,6 +310,16 @@ class DuelViewModel(application: Application) : AndroidViewModel(application) {
                         put("broadcast", buildJsonObject { put("self", false) })
                     })
                 }, joinRef = "1")
+
+                // If a post-connect callback is provided (guest "join" broadcast),
+                // run it in a child coroutine after a brief pause so the server
+                // can process the phx_join and send back the phx_reply ack.
+                if (onConnected != null) {
+                    launch {
+                        delay(600)
+                        onConnected()
+                    }
+                }
 
                 launch {
                     while (isActive) {

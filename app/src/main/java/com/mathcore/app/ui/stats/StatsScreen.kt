@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +42,7 @@ private val sectionTabs = listOf(
 private val sectionEmoji = mapOf(
     "integrals" to "∫", "derivatives" to "∂", "limits" to "lim",
     "series" to "Σ", "ode" to "dy/dx", "probability" to "P", "linalg" to "A",
-    "duel" to "⚔️", "daily" to "📅"
+    "duel" to "VS", "daily" to "D"
 )
 
 private val sectionName = mapOf(
@@ -183,7 +184,12 @@ fun StatsScreen(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text("🏆", fontSize = 56.sp)
+                                    Icon(
+                                        Icons.Default.EmojiEvents,
+                                        contentDescription = null,
+                                        tint = Color(0xFFF59E0B),
+                                        modifier = Modifier.size(56.dp)
+                                    )
                                     Spacer(Modifier.height(12.dp))
                                     Text(
                                         "Рейтинг пуст",
@@ -234,7 +240,12 @@ private fun XpGuideCard(expanded: Boolean, onToggle: () -> Unit) {
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("⚡", fontSize = 18.sp)
+                Icon(
+                    Icons.Default.FlashOn,
+                    contentDescription = null,
+                    tint = Color(0xFF1E3A8A),
+                    modifier = Modifier.size(18.dp)
+                )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     "Как начислять XP-баллы",
@@ -259,13 +270,13 @@ private fun XpGuideCard(expanded: Boolean, onToggle: () -> Unit) {
                 Column(modifier = Modifier.padding(top = 12.dp)) {
                     HorizontalDivider(color = Color(0xFF1E3A8A).copy(alpha = 0.15f))
                     Spacer(Modifier.height(10.dp))
-                    XpGuideRow("🟢", "Лёгкий", "+10 XP за правильный ответ", Color(0xFF16A34A))
+                    XpGuideRow("Лёгкий",    "+10 XP за правильный ответ",        Color(0xFF16A34A))
                     Spacer(Modifier.height(6.dp))
-                    XpGuideRow("🟡", "Средний", "+20 XP за правильный ответ", Color(0xFFD97706))
+                    XpGuideRow("Средний",   "+20 XP за правильный ответ",        Color(0xFFD97706))
                     Spacer(Modifier.height(6.dp))
-                    XpGuideRow("🔴", "Сложный", "+30 XP за правильный ответ", Color(0xFFDC2626))
+                    XpGuideRow("Сложный",   "+30 XP за правильный ответ",        Color(0xFFDC2626))
                     Spacer(Modifier.height(6.dp))
-                    XpGuideRow("🏆", "Бонус 100%", "+25 XP за идеальный результат", Color(0xFF7C3AED))
+                    XpGuideRow("Бонус 100%","+25 XP за идеальный результат",     Color(0xFF7C3AED), icon = Icons.Default.Stars)
                     Spacer(Modifier.height(10.dp))
                     HorizontalDivider(color = Color(0xFF1E3A8A).copy(alpha = 0.15f))
                     Spacer(Modifier.height(8.dp))
@@ -281,9 +292,14 @@ private fun XpGuideCard(expanded: Boolean, onToggle: () -> Unit) {
 }
 
 @Composable
-private fun XpGuideRow(emoji: String, label: String, desc: String, color: Color) {
+private fun XpGuideRow(label: String, desc: String, color: Color, icon: ImageVector? = null) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(emoji, fontSize = 16.sp, modifier = Modifier.width(28.dp))
+        if (icon != null) {
+            Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(20.dp))
+        } else {
+            Box(modifier = Modifier.size(12.dp).clip(CircleShape).background(color))
+        }
+        Spacer(Modifier.width(8.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(label, fontWeight = FontWeight.SemiBold, fontSize = 13.sp, color = color)
             Text(desc, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -339,9 +355,10 @@ fun LeaderboardRow(
                 modifier = Modifier.size(36.dp).clip(CircleShape).background(medalBg)
             ) {
                 Text(
-                    when (position) { 1 -> "🥇"; 2 -> "🥈"; 3 -> "🥉"; else -> "$position" },
+                    "$position",
                     fontWeight = FontWeight.Bold,
-                    fontSize = if (position <= 3) 16.sp else 13.sp
+                    fontSize = if (position <= 3) 15.sp else 13.sp,
+                    color = if (position <= 3) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
@@ -389,7 +406,7 @@ fun LeaderboardRow(
                 if (isGlobal) {
                     // Global aggregate row
                     Text(
-                        "📊 ${entry.totalQuestions} тест${pluralTests(entry.totalQuestions)}  ·  лучший ${entry.score}%",
+                        "${entry.totalQuestions} тест${pluralTests(entry.totalQuestions)}  ·  лучший ${entry.score}%",
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -403,7 +420,7 @@ fun LeaderboardRow(
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            "${sectionEmoji[entry.section] ?: "📝"} ${sectionName[entry.section] ?: entry.section}",
+                            "${sectionEmoji[entry.section]?.let { "$it " } ?: ""}${sectionName[entry.section] ?: entry.section}",
                             fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text("·", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
