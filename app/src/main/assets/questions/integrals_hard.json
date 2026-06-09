@@ -1,0 +1,22 @@
+[
+{"question":"Вычислите $\\int_0^{\\pi/2} \\frac{dx}{1+\\tan^3 x}$","options":["0","\\frac{\\pi}{4}","\\frac{\\pi}{2}","1"],"correct":1},
+{"question":"Вычислите $\\int_0^{+\\infty} x e^{-x^2}\\,dx$","options":["\\frac{1}{4}","\\frac{1}{2}","1","\\sqrt{\\pi}"],"correct":1},
+{"question":"Вычислите $\\int_0^{\\pi} x^2\\cos x\\,dx$","options":["-2\\pi","0","\\pi^2-4","2\\pi"],"correct":0},
+{"question":"Вычислите $\\int e^x\\sin x\\,dx$","options":["\\frac{e^x(\\sin x - \\cos x)}{2}+C","e^x\\sin x+C","e^x\\cos x+C","\\frac{\\sin x + \\cos x}{2}+C"],"correct":0},
+{"question":"Вычислите $\\int \\frac{dx}{x^2-1}$","options":["\\arctan x+C","\\ln|x-1|+C","\\frac{1}{2}\\ln\\left|\\frac{x-1}{x+1}\\right|+C","\\frac{1}{x^2-1}+C"],"correct":2},
+{"question":"$\\int_{-\\infty}^{+\\infty} e^{-x^2}\\,dx = ?$","options":["1","π","\\sqrt{\\pi}","2"],"correct":2},
+{"question":"Вычислите $\\int \\frac{x^2}{x^2+1}\\,dx$","options":["x+C","x-\\arctan x+C","\\arctan x+C","\\frac{x^2}{2}+C"],"correct":1},
+{"question":"$\\int_0^{\\pi} x\\sin x\\,dx = ?$","options":["0","1","π","2π"],"correct":2},
+{"question":"Вычислите $\\int_0^1 \\arctan x\\,dx$","options":["\\frac{\\pi}{4}-\\frac{\\ln 2}{2}","\\frac{\\pi}{4}","\\frac{\\pi}{4}+\\frac{\\ln 2}{2}","\\frac{1}{2}"],"correct":0},
+{"question":"$\\int_0^{\\pi/4}\\tan^2 x\\,dx = ?$","options":["0","1-\\frac{\\pi}{4}","\\frac{\\pi}{4}","\\frac{\\pi}{4}-1"],"correct":3},
+{"question":"Вычислите $\\int e^x\\cos x\\,dx$","options":["\\frac{e^x(\\sin x+\\cos x)}{2}+C","e^x\\sin x+C","e^x\\cos x+C","\\frac{e^x(\\cos x-\\sin x)}{2}+C"],"correct":0},
+{"question":"$\\int_0^{+\\infty} \\frac{dx}{1+x^2} = ?$","options":["0","\\frac{\\pi}{4}","\\frac{\\pi}{2}","\\pi"],"correct":2},
+{"question":"Вычислите $\\int \\frac{dx}{x^2(x+1)}$ методом частичных дробей","options":["-\\frac{1}{x}+\\ln\\left|\\frac{x+1}{x}\\right|+C","\\frac{1}{x}+\\ln|x|+C","-\\frac{1}{x}+\\ln|x|-\\ln|x+1|+C","\\frac{1}{x^2}+\\ln|x|+C"],"correct":0},
+{"question":"Вычислите $\\int e^x\\sin^2 x\\,dx$","options":["\\frac{e^x(5-\\cos 2x-2\\sin 2x)}{10}+C","\\frac{e^x\\sin^2 x}{2}+C","\\frac{e^x(1-\\cos 2x)}{2}+C","\\frac{e^x(2-\\cos 2x)}{5}+C"],"correct":0},
+{"question":"Вычислите $\\int \\frac{x^3}{x^2+1}\\,dx$","options":["\\frac{x^2}{2}-\\frac{1}{2}\\ln(x^2+1)+C","\\frac{x^2}{2}+\\ln(x^2+1)+C","x^2-\\arctan x+C","\\frac{x^2}{2}+\\arctan x+C"],"correct":0},
+{"question":"$\\int_0^{1} \\ln x\\,dx = ?$","options":["0","-1","1","∞"],"correct":1},
+{"question":"Вычислите $\\int \\frac{dx}{\\sqrt{x^2-1}}$ при $x>1$","options":["\\arcsin x+C","\\ln|x+\\sqrt{x^2-1}|+C","\\arctan x+C","\\sqrt{x^2-1}+C"],"correct":1},
+{"question":"Несобственный интеграл $\\int_1^{\\infty}\\frac{dx}{x^p}$ сходится при...","options":["p>0","p>1","p<1","p=1"],"correct":1},
+{"question":"Вычислите $\\int \\frac{dx}{x^2+2x+5}$","options":["\\frac{1}{2}\\arctan\\frac{x+1}{2}+C","\\arctan(x+1)+C","\\frac{1}{4}\\arctan\\frac{x+1}{2}+C","\\ln(x^2+2x+5)+C"],"correct":0},
+{"question":"$\\int_0^{\\pi/2}\\sin^2 x\\,dx = ?$","options":["0","\\frac{\\pi}{4}","\\frac{\\pi}{2}","\\pi"],"correct":1}
+]

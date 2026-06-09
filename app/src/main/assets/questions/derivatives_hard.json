@@ -1,0 +1,22 @@
+[
+{"question":"Найдите производную $f(x) = x^x$","options":["x^x\\ln x","x^{x-1}","x^x(1+\\ln x)","\\frac{x^{x+1}}{x+1}"],"correct":2},
+{"question":"Найдите производную $f(x) = \\arcsin(\\sqrt{x})$","options":["\\frac{1}{2\\sqrt{x(1-x)}}","\\frac{1}{\\sqrt{1-x}}","\\frac{1}{2\\sqrt{x}}","-\\frac{1}{\\sqrt{1-x}}"],"correct":0},
+{"question":"Найдите $y''_{xx}$ для параметрически заданной функции $x=t-\\sin t$, $y=1-\\cos t$","options":["-\\frac{1}{(1-\\cos t)^2}","\\frac{1}{(1-\\cos t)^2}","-\\cot^2\\frac{t}{2}","\\frac{\\sin t}{(1-\\cos t)^2}"],"correct":0},
+{"question":"Найдите производную $f(x) = \\ln\\tan\\frac{x}{2}$","options":["\\frac{1}{\\sin x}","\\frac{1}{\\cos x}","\\cot x","\\tan(x/2)"],"correct":0},
+{"question":"Найдите $n$-ю производную $f(x) = \\frac{1}{1-x}$","options":["\\frac{n!}{(1-x)^{n+1}}","\\frac{(-1)^n n!}{(1-x)^{n+1}}","\\frac{n!}{(1-x)^n}","\\frac{1}{(1-x)^{n+1}}"],"correct":0},
+{"question":"Найдите $y'$ из уравнения $x^2+y^2=1$ (неявное дифференцирование)","options":["y/x","-x/y","x/y","-y/x"],"correct":1},
+{"question":"Формула Лейбница: $(uv)^{(n)} = ?$","options":["u^{(n)}v + uv^{(n)}","u^{(n)}v^{(n)}","\\sum_{k=0}^{n}C_n^k u^{(k)}v^{(n-k)}","nu^{(n-1)}v'"],"correct":2},
+{"question":"Найдите производную $y = \\ln|\\cos x|$","options":["\\frac{\\sin x}{\\cos x}","-\\tan x","\\tan x","\\frac{1}{\\cos x}"],"correct":1},
+{"question":"Производная $n$-го порядка от $\\sin x$ равна...","options":["\\sin(x+n\\pi/2)","\\sin(x+n\\pi)","n\\sin x","(-1)^n\\sin x"],"correct":0},
+{"question":"Найдите $f'(x)$, если $f(x)=x^{\\cos x}$","options":["x^{\\cos x}\\!\\left(\\frac{\\cos x}{x}-\\sin x\\ln x\\right)","x^{\\cos x-1}(-\\sin x)","x^{\\cos x}(-\\sin x\\ln x)","\\cos x\\cdot x^{\\cos x-1}"],"correct":0},
+{"question":"Найдите производную $f(x) = (\\sin x)^{\\cos x}$","options":["(\\cos x)(\\sin x)^{\\cos x - 1}\\cos x","(\\sin x)^{\\cos x}(\\cos x\\cot x - \\sin x\\ln\\sin x)","(\\cos x)^{\\cos x}","-(\\sin x)^{\\cos x}\\sin x\\ln(\\sin x)"],"correct":1},
+{"question":"Найдите $y''$ для $y = \\sin(x^2)$","options":["2\\cos(x^2)","4x^2(-\\sin(x^2))+2\\cos(x^2)","2\\cos(x^2)-4x^2\\sin(x^2)","4x\\cos(x^2)"],"correct":2},
+{"question":"Найдите производную $f(x) = \\arctan\\frac{x-1}{x+1}$","options":["\\frac{1}{1+(\\frac{x-1}{x+1})^2}","\\frac{1}{x^2+1}","\\frac{1}{2(x^2+1)}","\\frac{2}{x^2+1}"],"correct":1},
+{"question":"Найдите производную $f(x) = \\sqrt[3]{x^2}\\cdot e^x$","options":["\\frac{2}{3}x^{-1/3}e^x","\\frac{2}{3}x^{-1/3}e^x + x^{2/3}e^x","x^{2/3}e^x","\\frac{2e^x}{3x^{1/3}}"],"correct":1},
+{"question":"Найдите $y'$, если $x^3+y^3=6xy$ (неявное дифференцирование)","options":["\\frac{2y-x^2}{y^2-2x}","\\frac{x^2-2y}{y^2-2x}","\\frac{2y-x^2}{2y-x}","\\frac{x-y^2}{y-x^2}"],"correct":0},
+{"question":"Найдите производную $y = \\ln\\frac{1+\\sin x}{1-\\sin x}$","options":["\\frac{2}{\\cos x}","\\frac{2\\cos x}{1-\\sin^2 x}","\\frac{2}{\\cos^2 x}","\\frac{2}{1-\\sin x}"],"correct":0},
+{"question":"Найдите $y'$, если $y = \\int_0^{x^2}\\sin t\\,dt$","options":["\\sin(x^2)","2x\\sin(x^2)","\\cos(x^2)","2x\\cos(x^2)"],"correct":1},
+{"question":"Найдите $n$-ю производную $f(x) = e^{ax}$","options":["e^{ax}","a^n e^{ax}","ne^{ax}","a\\cdot e^{ax}"],"correct":1},
+{"question":"Найдите производную $f(x) = x^{\\sin x}$","options":["x^{\\sin x-1}\\cos x","x^{\\sin x}(\\cos x\\ln x + \\frac{\\sin x}{x})","x^{\\sin x}\\cos x\\ln x","\\frac{\\sin x}{x}x^{\\sin x}"],"correct":1},
+{"question":"Второй дифференциал $d^2y$ для $y=x^3$ при $dx$ равен...","options":["3x^2\\,dx","6x\\,dx","6x\\,(dx)^2","3x^2\\,(dx)^2"],"correct":2}
+]

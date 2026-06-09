@@ -1,0 +1,33 @@
+# Built outputs
+*.iml
+.gradle/
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Android generated
+app/build/
+
+# Kotlin / Java compiled
+*.class
+*.jar
+*.war
+*.aar
+
+# Bundled JDK — large binary, not committed
+jdk11/
+jdk11.zip
+
+# Sensitive credentials — never commit
+# local.properties already listed above; this is an explicit reminder:
+# local.properties   ← contains SUPABASE_URL, SUPABASE_KEY, sdk.dir

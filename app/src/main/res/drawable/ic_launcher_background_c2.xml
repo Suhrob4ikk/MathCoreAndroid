@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Концепция 2: Очень тёмный сине-чёрный -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:startColor="#060B18"
+        android:endColor="#0F2044"
+        android:angle="135"
+        android:type="linear" />
+</shape>

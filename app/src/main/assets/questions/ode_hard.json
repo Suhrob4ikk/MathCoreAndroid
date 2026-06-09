@@ -1,0 +1,22 @@
+[
+{"question":"Задача Коши: $y''-2y'+y=e^x,\\;y(0)=0,\\;y'(0)=0 \\implies y(1)=?$","options":["\\frac{e}{2}","e","\\frac{e^2}{2}","0"],"correct":0},
+{"question":"Задача Коши: $y''+y=x,\\;y(0)=0,\\;y'(0)=0 \\implies y(\\pi)=?$","options":["π","0","2π","-π"],"correct":0},
+{"question":"Задача Коши Коши: $y''+y=0,\\;y(0)=1,\\;y'(0)=1 \\implies y(\\pi/4)=?$","options":["\\sqrt{2}","1","\\frac{\\sqrt{2}}{2}","0"],"correct":0},
+{"question":"Уравнение Эйлера $x^2y''+xy'+y=0$ при замене $x=e^t$ становится...","options":["\\ddot y+y=0","\\ddot y+\\dot y=0","\\ddot y-\\dot y+y=0","\\ddot y=0"],"correct":0},
+{"question":"Метод Лагранжа для $y''+p(x)y'+q(x)y=f(x)$: если $y_1,y_2$ — фундаментальная система, то $W(x)=?$","options":["y_1y_2'-y_1'y_2","y_1y_2","y_1'+y_2'","y_1y_2''-y_1''y_2"],"correct":0},
+{"question":"Задача Коши: $y'''-y=0,\\;y(0)=1,\\;y'(0)=0,\\;y''(0)=0$ — характеристические корни...","options":["1, e^{2\\pi i/3}, e^{4\\pi i/3}","1, -1, i","1, 0, -1","1, 2, 3"],"correct":0},
+{"question":"Устойчивость по Ляпунову: ноль — устойчивое равновесие $y'=f(y)$, если...","options":["$f(0)=0$ и $f'(0)<0$","$f(0)>0$","$f'(0)>0$","$f(0)<0$"],"correct":0},
+{"question":"Задача Коши: $y''+4y'+4y=e^{-2x},\\;y(0)=0,\\;y'(0)=0 \\implies y(1)=?$","options":["\\frac{e^{-2}}{2}","e^{-2}","\\frac{1}{2}","0"],"correct":0},
+{"question":"Метод Вронского: система $y_1,y_2$ является фундаментальной, если $W(x)\\neq ?$","options":["1","0","\\infty","-1"],"correct":1},
+{"question":"Задача Коши: $y'=y+e^x,\\;y(0)=1 \\implies y(1)=?$","options":["2e","e+1","(1+1)e","2e-e"],"correct":0},
+{"question":"ОДУ $y''+\\omega^2 y=A\\cos\\omega x$ (резонанс): частное решение имеет вид...","options":["A\\cos\\omega x","Ax\\sin\\omega x","Ax(\\cos\\omega x+\\sin\\omega x)","A\\sin\\omega x"],"correct":1},
+{"question":"Уравнение Бессель $x^2y''+xy'+(x^2-n^2)y=0$: при $n=0$ решение — функция Бесселя $J_0$. $J_0(0)=?$","options":["0","1","-1","\\infty"],"correct":1},
+{"question":"Задача Коши: $y''=e^y,\\;y(0)=0,\\;y'(0)=0 \\implies y(x)=?$","options":["-2\\ln\\cos(x/\\sqrt{2})","\\ln\\cosh x","e^x-1","\\ln(1+x^2)"],"correct":0},
+{"question":"Краевая задача $y''+\\lambda y=0,\\;y(0)=y(\\pi)=0$ имеет нетривиальные решения при...","options":["\\lambda=n^2","\\lambda=n","\\lambda=0","\\lambda=n^2\\pi^2"],"correct":0},
+{"question":"Задача Коши: $y''+2y'+5y=0,\\;y(0)=1,\\;y'(0)=0 \\implies$ огибающая амплитуды убывает как $e^{?}$","options":["e^{-x}","e^{-2x}","e^{x}","e^{-5x}"],"correct":0},
+{"question":"Теорема Флоке: уравнение $y''+p(t)y=0$ с периодическим $p$ имеет...","options":["Только тригонометрические решения","Решение вида $e^{\\mu t}\\phi(t)$, где $\\phi$ периодично","Только экспоненциальные решения","Только нулевое решение"],"correct":1},
+{"question":"Задача Коши: $y'=y(1-y),\\;y(0)=0.1 \\implies \\lim_{x\\to+\\infty}y(x)=?$","options":["0","0.1","1","∞"],"correct":2},
+{"question":"ОДУ $y^{(4)}-y=0$: характеристические корни $k=1,-1,i,-i$. Общее решение...","options":["C_1e^x+C_2e^{-x}+C_3\\cos x+C_4\\sin x","(C_1+C_2x)e^x","C_1e^x+C_2e^{-x}","e^x\\cos x"],"correct":0},
+{"question":"Задача Коши: $xy'=y\\ln y,\\;y(1)=e \\implies y(e)=?$","options":["e^e","e^2","e","e^{e-1}"],"correct":0},
+{"question":"Асимптотика решения $y'=-y+\\sin x$ при $x\\to+\\infty$...","options":["y\\to 0","y\\to\\frac{\\sin x-\\cos x}{2}","y\\to\\sin x","y\\to\\infty"],"correct":1}
+]

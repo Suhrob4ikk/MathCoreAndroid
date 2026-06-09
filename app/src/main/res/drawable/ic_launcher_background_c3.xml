@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Концепция 3: Тёмно-синий фон для щита -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:startColor="#0C1A3A"
+        android:endColor="#1E3A8A"
+        android:angle="135"
+        android:type="linear" />
+</shape>

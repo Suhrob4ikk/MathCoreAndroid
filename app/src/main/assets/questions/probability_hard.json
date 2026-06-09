@@ -1,0 +1,22 @@
+[
+{"question":"Пусть $X\\sim\\mathrm{Poisson}(\\lambda)$, $Y\\sim\\mathrm{Poisson}(\\mu)$ независимы. Найдите $P(X=k\\mid X+Y=n)$","options":["C_n^k\\left(\\frac{\\lambda}{\\lambda+\\mu}\\right)^k\\!\\left(\\frac{\\mu}{\\lambda+\\mu}\\right)^{n-k}","\\frac{e^{-\\lambda}\\lambda^k}{k!}","\\frac{(\\lambda+\\mu)^n e^{-\\lambda-\\mu}}{n!}","\\frac{\\lambda^k\\mu^{n-k}}{(\\lambda+\\mu)^n}"],"correct":0},
+{"question":"Если $X\\sim N(0,1)$, то $E[X^4]=?$","options":["1","2","3","4"],"correct":2},
+{"question":"Для биномиального B(n,p) при больших n и малых p≈λ/n он приближается...","options":["Нормальным N(np,npq)","Пуассоном P(λ)","Экспоненциальным","Равномерным"],"correct":1},
+{"question":"Моментно-порождающая функция M_X(t)=E[e^{tX}]. Для N(μ,σ²): M_X(t)=?","options":["e^{μt+σ²t²/2}","e^{μt}","e^{σ²t²/2}","μe^t"],"correct":0},
+{"question":"Неравенство Чебышёва: для с.в. с $E[X]=\\mu$, $D[X]=\\sigma^2$: $P(|X-\\mu|\\geq k\\sigma)\\leq ?$","options":["\\frac{1}{k}","\\frac{1}{k^2}","\\frac{\\sigma}{k}","\\frac{\\sigma^2}{k}"],"correct":1},
+{"question":"Коэффициент корреляции: ρ(X,Y)=Cov(X,Y)/(σ_X σ_Y). Он принадлежит диапазону...","options":["[0,1]","[-1,1]","[-∞,+∞]","[0,+∞)"],"correct":1},
+{"question":"Пусть $X\\sim\\mathrm{Exp}(\\lambda)$. В силу свойства отсутствия памяти $P(X>s+t\\mid X>s)=?$","options":["e^{-\\lambda s}","e^{-\\lambda t}","e^{-\\lambda(s+t)}","1-e^{-\\lambda t}"],"correct":1},
+{"question":"Характеристическая функция φ_X(t)=E[e^{itX}]. Для N(0,1): φ_X(t)=?","options":["e^{-t^2/2}","e^{t^2/2}","e^{it}","\\cos t"],"correct":0},
+{"question":"Цепи Маркова: необратимая стационарная цепь имеет стационарное распределение π, удовлетворяющее...","options":["πP=π","Pπ=π","π=P","π=e"],"correct":0},
+{"question":"Лемма Бореля-Кантелли (первая часть): если $\\sum P(A_n)<\\infty$, то P(бесконечно много A_n)=?","options":["1","0","0,5","Зависит от A_n"],"correct":1},
+{"question":"Функция распределения F(x)=P(X≤x). Свойство: при x→+∞ F(x)→?","options":["0","1","∞","F(0)"],"correct":1},
+{"question":"Теорема Байеса: $P(H_i\\mid A)=?$, если $H_1,\\ldots,H_n$ — полная система гипотез","options":["\\frac{P(A\\mid H_i)P(H_i)}{\\sum_j P(A\\mid H_j)P(H_j)}","\\frac{P(H_i)}{P(A)}","P(A\\mid H_i)+P(H_i)","\\frac{P(H_i\\mid A)}{P(A)}"],"correct":0},
+{"question":"Пусть $X\\sim U(0,1)$. Чему равно распределение $Y=-\\ln X$?","options":["U(0,1)","\\mathrm{Exp}(1)","N(0,1)","\\mathrm{Cauchy}"],"correct":1},
+{"question":"Неравенство Йенсена для выпуклой $\\varphi$: $\\varphi(E[X])$ и $E[\\varphi(X)]$ связаны как...","options":["\\varphi(E[X])\\leq E[\\varphi(X)]","\\varphi(E[X])\\geq E[\\varphi(X)]","\\varphi(E[X])=E[\\varphi(X)]","\\varphi(E[X])>E[\\varphi(X)]\\text{ всегда}"],"correct":0},
+{"question":"Гамма-распределение Γ(α,β): E[X]=?","options":["α","β","αβ","α/β"],"correct":2},
+{"question":"Бета-распределение Beta(α,β): E[X]=?","options":["\\frac{α}{β}","\\frac{α}{α+β}","\\frac{β}{α+β}","αβ"],"correct":1},
+{"question":"Метод максимального правдоподобия для Бернулли: оценка p̂=?","options":["n","\\bar{X}","n\\bar{X}","n/\\bar{X}"],"correct":1},
+{"question":"Случайная величина X~Uniform(a,b). D[X]=?","options":["(b-a)/2","(b-a)^2/12","(b-a)^2/6","(a+b)/2"],"correct":1},
+{"question":"Неравенство Маркова: для X≥0, P(X≥a)≤?","options":["a/E[X]","E[X]/a","a·E[X]","E[X]/a²"],"correct":1},
+{"question":"Производящая функция моментов биномиального B(n,p): M(t)=?","options":["(p+qe^t)^n","p^n e^{nt}","e^{np(e^t-1)}","(1-p+pe^t)^n"],"correct":3}
+]
