@@ -11,6 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.material3.*
@@ -43,7 +45,7 @@ private val sectionNames = mapOf(
 private val sectionEmoji = mapOf(
     "integrals" to "∫", "derivatives" to "∂", "limits" to "lim",
     "series" to "Σ", "ode" to "dy/dx", "probability" to "P",
-    "linalg" to "A", "duel" to "⚔️", "daily" to "📅", "mixed" to "📚"
+    "linalg" to "A", "duel" to "VS", "daily" to "D", "mixed" to "∗"
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -297,7 +299,7 @@ fun StatCard(icon: androidx.compose.ui.graphics.vector.ImageVector, value: Strin
     }
 }
 
-data class Badge(val emoji: String, val label: String, val description: String, val earned: Boolean)
+data class Badge(val icon: ImageVector, val label: String, val description: String, val earned: Boolean)
 
 fun computeBadges(results: List<TestResult>, streak: Int): List<Badge> {
     val count = results.size
@@ -308,16 +310,16 @@ fun computeBadges(results: List<TestResult>, streak: Int): List<Badge> {
         .toSet().size
 
     return listOf(
-        Badge("🎯", "Первый шаг", "Пройти первый тест", count >= 1),
-        Badge("📚", "5 тестов", "Пройти 5 тестов", count >= 5),
-        Badge("🔥", "10 тестов", "Пройти 10 тестов", count >= 10),
-        Badge("💎", "20 тестов", "Пройти 20 тестов", count >= 20),
-        Badge("🏆", "Перфекционист", "Получить 100%", best == 100),
-        Badge("⭐", "Отличник", "Средний балл ≥ 90%", avg >= 90.0),
-        Badge("✅", "Хорошист", "Средний балл ≥ 70%", avg >= 70.0),
-        Badge("🌟", "Всесторонний", "Изучить 4+ раздела", subjectCount >= 4),
-        Badge("⚡", "Стрик 5", "Стрик 5 дней подряд", streak >= 5),
-        Badge("🎓", "Стрик 10", "Стрик 10 дней подряд", streak >= 10)
+        Badge(Icons.Default.Adjust,                       "Первый шаг",    "Пройти первый тест",      count >= 1),
+        Badge(Icons.AutoMirrored.Filled.MenuBook,         "5 тестов",      "Пройти 5 тестов",         count >= 5),
+        Badge(Icons.Default.Whatshot,                     "10 тестов",     "Пройти 10 тестов",        count >= 10),
+        Badge(Icons.Default.Star,                         "20 тестов",     "Пройти 20 тестов",        count >= 20),
+        Badge(Icons.Default.Grade,                        "Перфекционист", "Получить 100%",            best == 100),
+        Badge(Icons.Default.Star,                         "Отличник",      "Средний балл ≥ 90%",      avg >= 90.0),
+        Badge(Icons.Default.CheckCircle,                  "Хорошист",      "Средний балл ≥ 70%",      avg >= 70.0),
+        Badge(Icons.Default.Stars,                        "Всесторонний",  "Изучить 4+ раздела",      subjectCount >= 4),
+        Badge(Icons.Default.FlashOn,                      "Стрик 5",       "Стрик 5 дней подряд",    streak >= 5),
+        Badge(Icons.Default.School,                       "Стрик 10",      "Стрик 10 дней подряд",   streak >= 10)
     ).filter { it.earned }
 }
 
@@ -348,7 +350,12 @@ fun BadgeChip(badge: Badge) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
         ) {
-            Text(badge.emoji, fontSize = 24.sp)
+            Icon(
+                badge.icon,
+                contentDescription = badge.label,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp)
+            )
             Spacer(Modifier.height(2.dp))
             Text(
                 badge.label,

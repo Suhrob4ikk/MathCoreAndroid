@@ -119,7 +119,7 @@ fun HomeScreen(
                     ) {
                         Column {
                             Text(
-                                "Привет, ${profile?.username ?: "Студент"}! 👋",
+                                "Привет, ${profile?.username ?: "Студент"}!",
                                 color = Color.White,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold
@@ -137,7 +137,11 @@ fun HomeScreen(
                                     streak % 10 in 2..4    -> "дня"
                                     else                   -> "дней"
                                 }
-                                Text("🔥 Стрик: $streak $streakWord", color = Color(0xFFFCD34D), fontSize = 13.sp)
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(Icons.Default.Whatshot, null, tint = Color(0xFFFCD34D), modifier = Modifier.size(14.dp))
+                                    Spacer(Modifier.width(3.dp))
+                                    Text("Стрик: $streak $streakWord", color = Color(0xFFFCD34D), fontSize = 13.sp)
+                                }
                             }
                         }
                         Box(
@@ -209,7 +213,7 @@ fun HomeScreen(
                             modifier = Modifier.padding(20.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text("⚔️", fontSize = 32.sp)
+                            Icon(Icons.Default.Groups, null, tint = Color.White, modifier = Modifier.size(36.dp))
                             Spacer(Modifier.height(6.dp))
                             Text("Дуэль", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                             Text("1 vs 1 онлайн", color = Color.White.copy(alpha = 0.75f), fontSize = 11.sp)
@@ -229,7 +233,10 @@ fun HomeScreen(
                             modifier = Modifier.padding(20.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(if (mistakeCount == 0) "✅" else "❌", fontSize = 32.sp)
+                            Icon(
+                                if (mistakeCount == 0) Icons.Default.CheckCircle else Icons.Default.Error,
+                                null, tint = Color.White, modifier = Modifier.size(36.dp)
+                            )
                             Spacer(Modifier.height(6.dp))
                             Text("Ошибки", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                             val cnt = mistakeCount
@@ -372,7 +379,12 @@ fun DailyChallengeCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(if (completed) "✅" else "📅", fontSize = 32.sp)
+                Icon(
+                    if (completed) Icons.Default.CheckCircle else Icons.Default.DateRange,
+                    null,
+                    tint = if (completed) Color(0xFF15803D) else Color(0xFF92400E),
+                    modifier = Modifier.size(36.dp)
+                )
                 Spacer(Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
@@ -400,18 +412,23 @@ fun DailyChallengeCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    "🕐 Следующий через %02d:%02d:%02d".format(
-                        countdown / 3600, (countdown % 3600) / 60, countdown % 60
-                    ),
-                    fontSize = 11.sp,
-                    color = if (completed) Color(0xFF166534) else Color(0xFF78350F)
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    val timerColor = if (completed) Color(0xFF166534) else Color(0xFF78350F)
+                    Icon(Icons.Default.Timer, null, tint = timerColor, modifier = Modifier.size(12.dp))
+                    Spacer(Modifier.width(3.dp))
+                    Text(
+                        "Следующий через %02d:%02d:%02d".format(
+                            countdown / 3600, (countdown % 3600) / 60, countdown % 60
+                        ),
+                        fontSize = 11.sp,
+                        color = timerColor
+                    )
+                }
                 TextButton(
                     onClick = onShowLeaderboard,
                     contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp, vertical = 0.dp)
                 ) {
-                    Text("Лидеры дня 🏆", fontSize = 12.sp,
+                    Text("Лидеры дня", fontSize = 12.sp,
                         color = Color(0xFFD97706), fontWeight = FontWeight.Medium)
                 }
             }

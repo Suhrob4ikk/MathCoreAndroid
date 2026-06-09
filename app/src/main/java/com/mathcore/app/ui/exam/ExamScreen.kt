@@ -8,6 +8,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -111,7 +112,11 @@ fun ExamSelectionScreen(
                     .padding(20.dp)
             ) {
                 Column {
-                    Text("🎓 Экзаменационный режим", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.School, null, tint = Color.White, modifier = Modifier.size(20.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text("Экзаменационный режим", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    }
                     Spacer(Modifier.height(4.dp))
                     Text(
                         "Строгий режим: таймер не останавливается, ответ нельзя изменить. Результат оценивается по 5-балльной шкале.",
@@ -164,6 +169,11 @@ fun ExamTypeCard(type: ExamType, onClick: () -> Unit) {
         ExamType.STANDARD -> Color(0xFFEFF6FF) to Color(0xFF2563EB)
         ExamType.FULL -> Color(0xFFF5F3FF) to Color(0xFF7C3AED)
     }
+    val typeIcon = when (type) {
+        ExamType.QUICK -> Icons.Default.FlashOn
+        ExamType.STANDARD -> Icons.AutoMirrored.Filled.Assignment
+        ExamType.FULL -> Icons.Default.School
+    }
     Card(
         onClick = onClick,
         shape = RoundedCornerShape(20.dp),
@@ -174,7 +184,7 @@ fun ExamTypeCard(type: ExamType, onClick: () -> Unit) {
             modifier = Modifier.padding(20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(type.emoji, fontSize = 36.sp)
+            Icon(typeIcon, null, tint = accent, modifier = Modifier.size(36.dp))
             Spacer(Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(type.displayName, fontWeight = FontWeight.Bold, color = accent, fontSize = 16.sp)
@@ -511,9 +521,11 @@ fun ExamResultScreen(
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    if (result.passed) "🎓" else "📋",
-                    fontSize = 64.sp
+                Icon(
+                    Icons.Default.School,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(72.dp)
                 )
                 Spacer(Modifier.height(12.dp))
                 Text(
