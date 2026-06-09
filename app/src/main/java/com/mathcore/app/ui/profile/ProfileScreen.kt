@@ -75,10 +75,12 @@ fun ProfileScreen(
     val xpLevel = displayXp / 3000 + 1              // 3000 XP на уровень — согласовано с HomeScreen
     val xpInLevel = displayXp % 3000
 
-    // Уровень по системе тестов (единая система с публичным профилем)
-    val totalTestsCount = results.size
-    val avgScoreAll = if (results.isEmpty()) 0.0
-                     else results.map { it.score }.average()
+    // Уровень по системе тестов (единая система с публичным профилем и рейтингом).
+    // Дуэли исключаются — так же, как в лидерборде и веб-профиле, чтобы цифры везде совпадали.
+    val nonDuelResults = results.filter { !it.section.startsWith("duel") }
+    val totalTestsCount = nonDuelResults.size
+    val avgScoreAll = if (nonDuelResults.isEmpty()) 0.0
+                     else nonDuelResults.map { it.score }.average()
     val levelLabel = when {
         totalTestsCount >= 20 && avgScoreAll >= 85.0 -> "Эксперт"
         totalTestsCount >= 10 && avgScoreAll >= 75.0 -> "Продвинутый"

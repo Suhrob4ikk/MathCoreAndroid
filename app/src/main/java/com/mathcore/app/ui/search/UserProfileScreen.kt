@@ -68,16 +68,16 @@ fun UserProfileScreen(
         )
     }
 
-    val totalTests = results.size
-    val avgScore = if (results.isEmpty()) 0.0 else results.map { it.score }.average()
-    val bestScore = results.maxOfOrNull { it.score } ?: 0
+    // Exclude duels from all stats — same filter as global leaderboard and web profile.
+    val nonDuelResults = results.filter { !it.section.startsWith("duel") }
+    val totalTests = nonDuelResults.size
+    val avgScore = if (nonDuelResults.isEmpty()) 0.0 else nonDuelResults.map { it.score }.average()
+    val bestScore = nonDuelResults.maxOfOrNull { it.score } ?: 0
     val level = userLevel(totalTests, avgScore)
-    val totalXp = results
-        .filter { !it.section.startsWith("duel") }
-        .sumOf { r ->
-            computeXp(r.correctAnswers, r.difficulty, r.score) +
-            if (r.section == "daily") 50 else 0
-        }
+    val totalXp = nonDuelResults.sumOf { r ->
+        computeXp(r.correctAnswers, r.difficulty, r.score) +
+        if (r.section == "daily") 50 else 0
+    }
 
     Scaffold(
         topBar = {
