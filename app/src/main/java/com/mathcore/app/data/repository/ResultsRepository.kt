@@ -60,20 +60,18 @@ class ResultsRepository {
             val all = response.body<List<LeaderboardEntry>>()
 
             val sorted = if (section == null) {
-                // Global leaderboard: best attempt per unique section+difficulty combo per user.
-                // Mirrors web stats.js calcRatingPoints + per-combo dedup strategy exactly.
+                // Global leaderboard: same formula as ProfileScreen — sum XP from ALL results
+                // (excluding duels), plus 50 bonus XP per daily completion.
+                // totalQuestions = actual number of tests taken (not unique combos).
                 all.filter { it.username.isNotBlank() && !it.section.startsWith("duel") }
                     .groupBy { it.username }
                     .map { (username, entries) ->
-                        val bestPerCombo = entries
-                            .groupBy { "${it.section}_${it.difficulty}" }
-                            .values
-                            .map { combo ->
-                                combo.maxByOrNull { computeXp(it.correctAnswers, it.difficulty, it.score) }!!
-                            }
-                        val totalXp    = bestPerCombo.sumOf { computeXp(it.correctAnswers, it.difficulty, it.score) }
-                        val totalTests = bestPerCombo.size
-                        val bestScore  = bestPerCombo.maxOf { it.score }
+                        val totalXp    = entries.sumOf {
+                            computeXp(it.correctAnswers, it.difficulty, it.score) +
+                            if (it.section == "daily") 50 else 0
+                        }
+                        val totalTests = entries.size
+                        val bestScore  = entries.maxOf { it.score }
                         LeaderboardEntry(
                             username       = username,
                             score          = bestScore,
