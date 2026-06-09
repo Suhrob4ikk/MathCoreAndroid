@@ -44,6 +44,7 @@ data class DuelUiState(
     val opponentName: String      = "",
     val myScore: Int              = 0,
     val opponentScore: Int        = 0,        // -1 = opponent timed out / disconnected
+    val opponentScoreReceived: Boolean = false,  // true once opponent's score event arrives
     val countdown: Int            = 3,
     val questions: List<Question> = emptyList(),
     val error: String?            = null,
@@ -160,7 +161,7 @@ class DuelViewModel(application: Application) : AndroidViewModel(application) {
     fun dismissInvite() = _uiState.update { it.copy(pendingInvite = null) }
 
     fun acceptInvite(invite: PendingInvite, myUsername: String) {
-        _uiState.update { it.copy(pendingInvite = null) }
+        _uiState.update { it.copy(pendingInvite = null, opponentName = invite.fromUsername) }
         joinDuel(myUsername, invite.code)
     }
 
@@ -203,18 +204,24 @@ class DuelViewModel(application: Application) : AndroidViewModel(application) {
     /** Broadcast final score to the opponent after the quiz finishes. */
     fun broadcastScore(score: Int) {
         viewModelScope.launch {
-            _uiState.update { it.copy(myScore = score, phase = DuelPhase.WAITING_FOR_SCORE) }
+            val oppAlreadySent = _uiState.value.opponentScoreReceived
+            _uiState.update { it.copy(
+                myScore = score,
+                phase   = if (oppAlreadySent) DuelPhase.FINISHED else DuelPhase.WAITING_FOR_SCORE
+            ) }
             sendBroadcast("score", buildJsonObject {
                 put("score", score)
                 put("name",  myName)
             })
 
-            // Timeout: if opponent doesn't send score within 60 s, show results anyway
-            opponentTimeoutJob?.cancel()
-            opponentTimeoutJob = launch {
-                delay(60_000)
-                if (_uiState.value.phase == DuelPhase.WAITING_FOR_SCORE) {
-                    _uiState.update { it.copy(opponentScore = -1, phase = DuelPhase.FINISHED) }
+            if (!oppAlreadySent) {
+                // Timeout: if opponent doesn't send score within 60 s, show results anyway
+                opponentTimeoutJob?.cancel()
+                opponentTimeoutJob = launch {
+                    delay(60_000)
+                    if (_uiState.value.phase == DuelPhase.WAITING_FOR_SCORE) {
+                        _uiState.update { it.copy(opponentScore = -1, phase = DuelPhase.FINISHED) }
+                    }
                 }
             }
         }
@@ -255,7 +262,7 @@ class DuelViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.update {
             it.copy(
                 phase = DuelPhase.IDLE, code = "", opponentName = "",
-                myScore = 0, opponentScore = 0,
+                myScore = 0, opponentScore = 0, opponentScoreReceived = false,
                 countdown = 3, questions = emptyList(), error = null,
                 rematchRequested = false, pendingRematch = null
             )
@@ -368,7 +375,15 @@ class DuelViewModel(application: Application) : AndroidViewModel(application) {
                 "score" -> {
                     opponentTimeoutJob?.cancel()
                     val oppScore = payload["score"]?.jsonPrimitive?.int ?: 0
-                    _uiState.update { it.copy(opponentScore = oppScore, phase = DuelPhase.FINISHED) }
+                    _uiState.update { state ->
+                        state.copy(
+                            opponentScore         = oppScore,
+                            opponentScoreReceived = true,
+                            // Only advance to FINISHED if we already sent our own score
+                            phase = if (state.phase == DuelPhase.WAITING_FOR_SCORE) DuelPhase.FINISHED
+                                    else state.phase
+                        )
+                    }
                 }
 
                 // ── Rematch protocol ─────────────────────────────────────────
@@ -393,7 +408,8 @@ class DuelViewModel(application: Application) : AndroidViewModel(application) {
                     _uiState.update {
                         it.copy(
                             code = newCode, rematchRequested = false, pendingRematch = null,
-                            myScore = 0, opponentScore = 0, countdown = 3, questions = emptyList()
+                            myScore = 0, opponentScore = 0, opponentScoreReceived = false,
+                            countdown = 3, questions = emptyList()
                         )
                     }
                     startDuel()
@@ -414,7 +430,8 @@ class DuelViewModel(application: Application) : AndroidViewModel(application) {
                     _uiState.update {
                         it.copy(
                             code = newCode, selectedSection = section, selectedDiff = diff,
-                            myScore = 0, opponentScore = 0, countdown = 3, questions = emptyList()
+                            myScore = 0, opponentScore = 0, opponentScoreReceived = false,
+                            countdown = 3, questions = emptyList()
                         )
                     }
                     startDuel()

@@ -131,7 +131,13 @@ fun HomeScreen(
                             )
                             if (streak > 0) {
                                 Spacer(Modifier.height(4.dp))
-                                Text("🔥 Стрик: $streak дней", color = Color(0xFFFCD34D), fontSize = 13.sp)
+                                val streakWord = when {
+                                    streak % 100 in 11..19 -> "дней"
+                                    streak % 10 == 1       -> "день"
+                                    streak % 10 in 2..4    -> "дня"
+                                    else                   -> "дней"
+                                }
+                                Text("🔥 Стрик: $streak $streakWord", color = Color(0xFFFCD34D), fontSize = 13.sp)
                             }
                         }
                         Box(
