@@ -19,7 +19,9 @@ object SupabaseConfig {
 val json = Json {
     ignoreUnknownKeys = true
     isLenient          = true
-    encodeDefaults     = true
+    // encodeDefaults = false so that fields like id=null are NOT serialized on INSERT,
+    // which would otherwise cause Supabase to reject the request (NOT NULL constraint).
+    encodeDefaults     = false
 }
 
 // ── Session storage with SharedPreferences persistence ────────────────────

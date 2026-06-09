@@ -141,8 +141,10 @@ fun MathCoreApp(
 
             if (dailyDoneToday) {
                 prefs.setDailyCompleted(latestDaily!!.score)
-            } else {
-                // Сбрасываем устаревший/чужой статус ежедневки
+            } else if (loginResults.isNotEmpty()) {
+                // DB responded with history but no today's daily — safe to reset.
+                // If loginResults is empty it might be a network error, so don't reset
+                // local "completed" state (prevents false "not done" after an outage).
                 prefs.resetDailyCompleted()
             }
         }
@@ -366,6 +368,7 @@ fun MathCoreApp(
 
         is Screen.Results -> ResultsScreen(
             result = s.result,
+            currentUsername = authState.currentProfile?.username,
             onRetry = {
                 val config = s.result.config
                 val questions = repo.getShuffledQuestions(config.subject, config.difficulty, config.questionCount)

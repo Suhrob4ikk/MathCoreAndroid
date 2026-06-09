@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,29 +28,26 @@ import com.mathcore.app.ui.quiz.wrapMath
 @Composable
 fun ResultsScreen(
     result: QuizResult,
+    currentUsername: String? = null,
     onRetry: () -> Unit,
     onHome: () -> Unit
 ) {
     val pct = result.percentage
+    val isPerfect = pct == 100
+
     val scoreColor = when {
         pct >= 90 -> Color(0xFF10B981)
         pct >= 70 -> Color(0xFF3B82F6)
         pct >= 50 -> Color(0xFFF59E0B)
-        else -> Color(0xFFEF4444)
+        else      -> Color(0xFFEF4444)
     }
-    val emoji = when {
-        pct == 100 -> "🏆"
-        pct >= 90 -> "🌟"
-        pct >= 70 -> "✅"
-        pct >= 50 -> "📚"
-        else -> "💪"
-    }
+
     val comment = when {
-        pct == 100 -> "Феноменально! Все баллы!"
-        pct >= 90 -> "Отлично! Почти идеально."
-        pct >= 70 -> "Хорошо! Можно ещё лучше."
-        pct >= 50 -> "Неплохо, но есть над чем поработать."
-        else -> "Не отчаивайся, попробуй ещё раз!"
+        pct == 100 -> if (!currentUsername.isNullOrBlank()) "$currentUsername, феноменально! Все баллы!" else "Феноменально! Все баллы!"
+        pct >= 90  -> "Отлично! Почти идеально."
+        pct >= 70  -> "Хорошо! Можно ещё лучше."
+        pct >= 50  -> "Неплохо, но есть над чем поработать."
+        else       -> "Не отчаивайся, попробуй ещё раз!"
     }
 
     LazyColumn(
@@ -57,61 +55,124 @@ fun ResultsScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.fillMaxSize()
     ) {
-        // Score hero
+        // Score hero card
         item {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = scoreColor.copy(alpha = 0.1f))
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+            if (isPerfect) {
+                // Perfect score — dark gradient card like the web's special treatment
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(32.dp)
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(
+                            Brush.linearGradient(
+                                listOf(Color(0xFF1E3A8A), Color(0xFF7C3AED))
+                            )
+                        )
+                        .padding(32.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(emoji, fontSize = 48.sp)
-                    Spacer(Modifier.height(12.dp))
-
-                    // Circular score
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .size(120.dp)
-                            .clip(CircleShape)
-                            .background(scoreColor)
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                "${result.correctCount}/${result.totalCount}",
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp
-                            )
-                            Text(
-                                "$pct%",
-                                color = Color.White.copy(alpha = 0.9f),
-                                fontSize = 16.sp
-                            )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            "PERFECT",
+                            color = Color(0xFFD4AF37),
+                            fontWeight = FontWeight.Black,
+                            fontSize = 13.sp,
+                            letterSpacing = 4.sp
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape)
+                                .background(Color.White.copy(alpha = 0.15f))
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(
+                                    "${result.correctCount}/${result.totalCount}",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 26.sp
+                                )
+                                Text(
+                                    "$pct%",
+                                    color = Color(0xFFD4AF37),
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 18.sp
+                                )
+                            }
                         }
+                        Spacer(Modifier.height(20.dp))
+                        Text(
+                            comment,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            if (result.config.isDailyChallenge) "Ежедневный вызов · ${result.config.difficulty.displayName}"
+                            else if (result.config.isStudyMode) "Работа над ошибками"
+                            else "${result.config.subject.displayName} · ${result.config.difficulty.displayName}",
+                            color = Color.White.copy(alpha = 0.7f),
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Center
+                        )
                     }
-
-                    Spacer(Modifier.height(16.dp))
-                    Text(
-                        comment,
-                        style = MaterialTheme.typography.titleMedium,
-                        textAlign = TextAlign.Center,
-                        color = scoreColor
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        if (result.config.isStudyMode) "Работа над ошибками"
-                        else if (result.config.isDailyChallenge) "Ежедневный вызов · ${result.config.difficulty.displayName}"
-                        else "${result.config.subject.displayName} · ${result.config.difficulty.displayName}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center
-                    )
+                }
+            } else {
+                // Standard result card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = scoreColor.copy(alpha = 0.08f))
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp)
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape)
+                                .background(scoreColor)
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(
+                                    "${result.correctCount}/${result.totalCount}",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 24.sp
+                                )
+                                Text(
+                                    "$pct%",
+                                    color = Color.White.copy(alpha = 0.9f),
+                                    fontSize = 16.sp
+                                )
+                            }
+                        }
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            comment,
+                            style = MaterialTheme.typography.titleMedium,
+                            textAlign = TextAlign.Center,
+                            color = scoreColor,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            if (result.config.isDailyChallenge) "Ежедневный вызов · ${result.config.difficulty.displayName}"
+                            else if (result.config.isStudyMode) "Работа над ошибками"
+                            else "${result.config.subject.displayName} · ${result.config.difficulty.displayName}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
         }
@@ -143,11 +204,8 @@ fun ResultsScreen(
             }
         }
 
-        // hasErrors: use the pre-computed correctCount from QuizResult so that
-        // open questions answered correctly are NOT shown as errors.
         val hasErrors = result.correctCount < result.totalCount
 
-        // Detailed results header — only when there are errors
         if (hasErrors) {
             item {
                 Text(
@@ -158,11 +216,6 @@ fun ResultsScreen(
             }
         }
 
-        // Question breakdown — correctly handles both choice and open questions.
-        // Previously, open questions with correct text answers were always shown as
-        // "Не отвечено / Правильно: ?" because userAnswers[i] is null for open questions
-        // (open answers live in openAnswers[i]). This caused the score circle to show
-        // 9/10 while the breakdown showed only 6 correct — now they match.
         itemsIndexed(result.questions) { index, question ->
             val isOpen = question.type == "open"
 
@@ -197,8 +250,6 @@ fun ResultsScreen(
             }
         }
 
-        // Correct ones (collapsed summary) — use result.correctCount which already
-        // accounts for open questions via QuizViewModel.finishQuiz().
         item {
             if (result.correctCount > 0) {
                 Card(
@@ -211,8 +262,6 @@ fun ResultsScreen(
                             .fillMaxWidth()
                             .padding(16.dp)
                     ) {
-                        Text("✅", fontSize = 20.sp)
-                        Spacer(Modifier.width(12.dp))
                         Text(
                             "Правильно отвечено: ${result.correctCount} вопросов",
                             color = Color(0xFF15803D),
@@ -260,11 +309,11 @@ fun ResultQuestionCard(
             )
             Spacer(Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("❌ Ваш ответ: ", fontWeight = FontWeight.Medium, fontSize = 13.sp, color = Color(0xFFB91C1C))
+                Text("Ваш ответ: ", fontWeight = FontWeight.Medium, fontSize = 13.sp, color = Color(0xFFB91C1C))
                 MathView(latex = wrapMath(userAnswerText), modifier = Modifier.weight(1f).heightIn(min = 28.dp, max = 60.dp))
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("✅ Правильно: ", fontWeight = FontWeight.Medium, fontSize = 13.sp, color = Color(0xFF15803D))
+                Text("Правильно: ", fontWeight = FontWeight.Medium, fontSize = 13.sp, color = Color(0xFF15803D))
                 MathView(latex = wrapMath(correctAnswerText), modifier = Modifier.weight(1f).heightIn(min = 28.dp, max = 60.dp))
             }
         }
