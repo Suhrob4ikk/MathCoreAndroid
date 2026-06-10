@@ -1,15 +1,27 @@
 package com.mathcore.app
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.School
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -211,12 +223,69 @@ private fun MathCoreBody(
                         authRepo.uploadAvatar(bytes, userId)
                         authViewModel.refreshProfile()
                     }
-                } catch (_: Exception) {}
+                } catch (e: Exception) {
+                    Log.e("MathCore", "Avatar upload failed", e)
+                }
             }
         }
     }
 
-    when (val s = screen) {
+    BackHandler(enabled = screen !is Screen.Auth && screen !is Screen.Home) {
+        screen = when (screen) {
+            is Screen.Exam        -> { examViewModel.reset(); Screen.Home }
+            is Screen.UserSearch  -> Screen.Stats
+            is Screen.UserProfile -> Screen.Stats
+            else                  -> Screen.Home
+        }
+    }
+
+    val showNavBar = screen is Screen.Home || screen is Screen.Stats || screen is Screen.Profile
+    Scaffold(
+        bottomBar = {
+            if (showNavBar) {
+                NavigationBar {
+                    NavigationBarItem(
+                        selected = screen is Screen.Home,
+                        onClick = { screen = Screen.Home },
+                        icon = { Icon(Icons.Default.Home, contentDescription = "Главная") },
+                        label = { Text("Главная") }
+                    )
+                    NavigationBarItem(
+                        selected = screen is Screen.Stats,
+                        onClick = { screen = Screen.Stats },
+                        icon = { Icon(Icons.Default.EmojiEvents, contentDescription = "Рейтинг") },
+                        label = { Text("Рейтинг") }
+                    )
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = { screen = Screen.Exam },
+                        icon = { Icon(Icons.Default.School, contentDescription = "Экзамен") },
+                        label = { Text("Экзамен") }
+                    )
+                    NavigationBarItem(
+                        selected = screen is Screen.Profile,
+                        onClick = {
+                            scope.launch {
+                                val userId = authState.currentProfile?.id ?: return@launch
+                                userResults = resultsRepo.getUserResults(userId)
+                                val dbXp = userResults
+                                    .filter { !it.section.startsWith("duel") }
+                                    .sumOf { r ->
+                                        computeXp(r.correctAnswers, r.difficulty, r.score) +
+                                        if (r.section == "daily") 50 else 0
+                                    }
+                                if (dbXp > 0) prefs.syncXp(dbXp)
+                            }
+                            screen = Screen.Profile
+                        },
+                        icon = { Icon(Icons.Default.Person, contentDescription = "Профиль") },
+                        label = { Text("Профиль") }
+                    )
+                }
+            }
+        }
+    ) { _ ->
+        when (val s = screen) {
         is Screen.Auth -> AuthScreen(
             onAuthSuccess = { screen = Screen.Home },
             authViewModel = authViewModel
@@ -538,4 +607,5 @@ private fun MathCoreBody(
             onBack = { screen = Screen.Home }
         )
     }
+    } // Scaffold
 }

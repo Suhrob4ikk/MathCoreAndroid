@@ -1,5 +1,7 @@
 package com.mathcore.app.util
 
+const val XP_PER_LEVEL = 3000
+
 /**
  * Single source of truth for XP calculation.
  *

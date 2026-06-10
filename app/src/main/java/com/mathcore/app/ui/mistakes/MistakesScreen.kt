@@ -20,6 +20,7 @@ import com.mathcore.app.data.Difficulty
 import com.mathcore.app.data.Question
 import com.mathcore.app.data.QuizConfig
 import com.mathcore.app.data.Subject
+import com.mathcore.app.ui.theme.MediumRadius
 import com.mathcore.app.ui.quiz.MathView
 import com.mathcore.app.ui.quiz.wrapMath
 
@@ -57,7 +58,7 @@ fun MistakesScreen(
                 title = { Text("Мои ошибки", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 },
                 actions = {
@@ -151,7 +152,7 @@ private fun MistakeCard(
     onPractice: () -> Unit
 ) {
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(MediumRadius),
         elevation = CardDefaults.cardElevation(1.dp)
     ) {
         Column(modifier = Modifier.padding(14.dp)) {

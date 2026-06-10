@@ -73,7 +73,7 @@ fun DailyLeaderboardDialog(
                         Text("Лидеры дня", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     }
                     IconButton(onClick = onDismiss, modifier = Modifier.size(32.dp)) {
-                        Icon(Icons.Default.Close, null, modifier = Modifier.size(18.dp))
+                        Icon(Icons.Default.Close, contentDescription = "Закрыть", modifier = Modifier.size(18.dp))
                     }
                 }
 

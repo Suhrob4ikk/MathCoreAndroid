@@ -25,6 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mathcore.app.ui.theme.LargeRadius
+import com.mathcore.app.ui.theme.SmallRadius
 import com.mathcore.app.viewmodel.AuthViewModel
 
 @Composable
@@ -78,8 +80,8 @@ fun AuthScreen(
 
             // Auth card
             Card(
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                shape = RoundedCornerShape(LargeRadius),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -91,7 +93,7 @@ fun AuthScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(Color(0xFFF1F5F9), RoundedCornerShape(12.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(SmallRadius))
                             .padding(4.dp)
                     ) {
                         listOf(true to "Войти", false to "Регистрация").forEach { (login, label) ->
@@ -101,8 +103,8 @@ fun AuthScreen(
                                     .weight(1f)
                                     .height(40.dp)
                                     .background(
-                                        if (isLogin == login) Color.White else Color.Transparent,
-                                        RoundedCornerShape(10.dp)
+                                        if (isLogin == login) MaterialTheme.colorScheme.surface else Color.Transparent,
+                                        RoundedCornerShape(SmallRadius)
                                     )
                             ) {
                                 TextButton(onClick = {
@@ -111,7 +113,8 @@ fun AuthScreen(
                                 }) {
                                     Text(
                                         label,
-                                        color = if (isLogin == login) Color(0xFF2563EB) else Color(0xFF64748B),
+                                        color = if (isLogin == login) MaterialTheme.colorScheme.primary
+                                                else MaterialTheme.colorScheme.onSurfaceVariant,
                                         fontWeight = if (isLogin == login) FontWeight.Bold else FontWeight.Normal
                                     )
                                 }
@@ -122,7 +125,7 @@ fun AuthScreen(
                     // Info banner (email confirmation)
                     if (uiState.info != null) {
                         Card(
-                            shape = RoundedCornerShape(12.dp),
+                            shape = RoundedCornerShape(SmallRadius),
                             colors = CardDefaults.cardColors(containerColor = Color(0xFFEFF6FF))
                         ) {
                             Row(
@@ -246,7 +249,7 @@ fun LoginForm(
             ),
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(SmallRadius)
         )
 
         OutlinedTextField(
@@ -276,12 +279,12 @@ fun LoginForm(
             ),
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(SmallRadius)
         )
 
         if (error != null) {
             Card(
-                shape = RoundedCornerShape(10.dp),
+                shape = RoundedCornerShape(SmallRadius),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE))
             ) {
                 Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.Top) {
@@ -297,7 +300,7 @@ fun LoginForm(
             onClick = { focusManager.clearFocus(); onLogin() },
             enabled = email.isNotBlank() && password.isNotBlank() && !isLoading,
             modifier = Modifier.fillMaxWidth().height(50.dp),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(SmallRadius)
         ) {
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.size(20.dp),
@@ -370,7 +373,7 @@ fun RegisterForm(
             keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(SmallRadius)
         )
 
         // Email
@@ -386,7 +389,7 @@ fun RegisterForm(
             keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(SmallRadius)
         )
 
         // Password
@@ -422,7 +425,7 @@ fun RegisterForm(
             keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(SmallRadius)
         )
 
         // Confirm password
@@ -451,12 +454,12 @@ fun RegisterForm(
             }),
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(SmallRadius)
         )
 
         if (error != null) {
             Card(
-                shape = RoundedCornerShape(10.dp),
+                shape = RoundedCornerShape(SmallRadius),
                 colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE))
             ) {
                 Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.Top) {
@@ -472,7 +475,7 @@ fun RegisterForm(
             onClick = { focusManager.clearFocus(); onRegister() },
             enabled = canSubmit,
             modifier = Modifier.fillMaxWidth().height(50.dp),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(SmallRadius)
         ) {
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.size(20.dp),

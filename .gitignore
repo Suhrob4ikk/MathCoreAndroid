@@ -1,3 +1,7 @@
+# Build caches / generated
+.kotlin/
+__pycache__/
+
 # Built outputs
 *.iml
 .gradle/

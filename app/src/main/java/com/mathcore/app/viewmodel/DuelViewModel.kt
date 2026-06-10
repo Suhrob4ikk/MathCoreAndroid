@@ -1,5 +1,6 @@
 package com.mathcore.app.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mathcore.app.data.Difficulty
@@ -92,7 +93,7 @@ class DuelViewModel @Inject constructor(
         searchJob = viewModelScope.launch {
             delay(300)
             try { _userSuggestions.value = resultsRepo.searchUsers(query) }
-            catch (_: Exception) {}
+            catch (e: Exception) { Log.e("DuelViewModel", "searchUsers failed", e) }
         }
     }
 

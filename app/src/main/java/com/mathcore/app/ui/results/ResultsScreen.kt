@@ -24,6 +24,8 @@ import com.mathcore.app.data.QuizResult
 import com.mathcore.app.data.normalizeAnswer
 import com.mathcore.app.ui.quiz.MathView
 import com.mathcore.app.ui.quiz.wrapMath
+import com.mathcore.app.ui.theme.LargeRadius
+import com.mathcore.app.ui.theme.SmallRadius
 
 @Composable
 fun ResultsScreen(
@@ -62,7 +64,7 @@ fun ResultsScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(24.dp))
+                        .clip(RoundedCornerShape(LargeRadius))
                         .background(
                             Brush.linearGradient(
                                 listOf(Color(0xFF1E3A8A), Color(0xFF7C3AED))
@@ -125,7 +127,7 @@ fun ResultsScreen(
                 // Standard result card
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp),
+                    shape = RoundedCornerShape(LargeRadius),
                     colors = CardDefaults.cardColors(containerColor = scoreColor.copy(alpha = 0.08f))
                 ) {
                     Column(
@@ -186,7 +188,7 @@ fun ResultsScreen(
                 OutlinedButton(
                     onClick = onHome,
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(14.dp)
+                    shape = RoundedCornerShape(SmallRadius)
                 ) {
                     Icon(Icons.Default.Home, contentDescription = null)
                     Spacer(Modifier.width(6.dp))
@@ -195,7 +197,7 @@ fun ResultsScreen(
                 Button(
                     onClick = onRetry,
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(14.dp)
+                    shape = RoundedCornerShape(SmallRadius)
                 ) {
                     Icon(Icons.Default.Refresh, contentDescription = null)
                     Spacer(Modifier.width(6.dp))
@@ -253,7 +255,7 @@ fun ResultsScreen(
         item {
             if (result.correctCount > 0) {
                 Card(
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(SmallRadius),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFFDCFCE7))
                 ) {
                     Row(
@@ -290,7 +292,7 @@ fun ResultQuestionCard(
         Color(0xFFFEE2E2) to Color(0xFFDC2626)
 
     Card(
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(SmallRadius),
         colors = CardDefaults.cardColors(containerColor = bgColor),
         modifier = Modifier.fillMaxWidth()
     ) {

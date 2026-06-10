@@ -33,6 +33,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mathcore.app.data.Question
 import com.mathcore.app.data.normalizeAnswer
+import com.mathcore.app.ui.theme.LargeRadius
+import com.mathcore.app.ui.theme.MediumRadius
+import com.mathcore.app.ui.theme.SmallRadius
 import com.mathcore.app.util.SoundManager
 import com.mathcore.app.viewmodel.QuizUiState
 
@@ -55,6 +58,7 @@ fun QuizScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
+            .navigationBarsPadding()
     ) {
         // Header
         QuizHeader(
@@ -159,7 +163,7 @@ fun QuizHeader(
                 // Answered pill
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(20.dp))
+                        .clip(RoundedCornerShape(LargeRadius))
                         .background(
                             if (answeredCount == totalQuestions) Color(0xFF10B981).copy(alpha = 0.12f)
                             else MaterialTheme.colorScheme.surfaceVariant
@@ -193,7 +197,7 @@ fun QuizHeader(
 @Composable
 fun QuestionCard(question: Question) {
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(MediumRadius),
         elevation = CardDefaults.cardElevation(2.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -340,9 +344,9 @@ fun AnswerOption(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(SmallRadius))
             .background(bgColor)
-            .border(1.5.dp, borderColor, RoundedCornerShape(14.dp))
+            .border(1.5.dp, borderColor, RoundedCornerShape(SmallRadius))
             .clickable(enabled = !isAnswered, onClick = {
                 if (soundEnabled) {
                     if (index == correctAnswer) SoundManager.playCorrect() else SoundManager.playWrong()
@@ -417,7 +421,7 @@ fun OpenAnswerInput(
                 }
             }),
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(SmallRadius),
             colors = if (isAnswered) OutlinedTextFieldDefaults.colors(
                 disabledContainerColor = if (isCorrect) Color(0xFF10B981).copy(alpha = 0.1f) else Color(0xFFDC2626).copy(alpha = 0.1f),
                 disabledBorderColor = if (isCorrect) Color(0xFF10B981) else Color(0xFFDC2626),
@@ -437,11 +441,11 @@ fun OpenAnswerInput(
                 },
                 enabled = inputText.isNotBlank(),
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(SmallRadius)
             ) { Text("Проверить ответ", fontWeight = FontWeight.Bold) }
         } else {
             Card(
-                shape = RoundedCornerShape(12.dp),
+                shape = RoundedCornerShape(SmallRadius),
                 colors = CardDefaults.cardColors(
                     containerColor = if (isCorrect) Color(0xFF10B981).copy(alpha = 0.12f)
                                     else Color(0xFFDC2626).copy(alpha = 0.12f)
@@ -484,7 +488,7 @@ fun QuizBottomBar(
                 onClick = onPrevious,
                 enabled = !isFirst,
                 modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(SmallRadius)
             ) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(Modifier.width(4.dp))
@@ -495,7 +499,7 @@ fun QuizBottomBar(
                 Button(
                     onClick = onFinish,
                     modifier = Modifier.weight(2f),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(SmallRadius),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF10B981))
                 ) {
                     Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.size(18.dp))
@@ -506,7 +510,7 @@ fun QuizBottomBar(
                 Button(
                     onClick = onNext,
                     modifier = Modifier.weight(2f),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(SmallRadius)
                 ) {
                     Text(if (isAnswered) "Следующий" else "Пропустить")
                     Spacer(Modifier.width(4.dp))

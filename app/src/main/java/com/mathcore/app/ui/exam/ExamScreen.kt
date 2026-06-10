@@ -27,6 +27,9 @@ import com.mathcore.app.data.ExamType
 import com.mathcore.app.data.Question
 import com.mathcore.app.ui.quiz.MathView
 import com.mathcore.app.ui.quiz.wrapMath
+import com.mathcore.app.ui.theme.LargeRadius
+import com.mathcore.app.ui.theme.MediumRadius
+import com.mathcore.app.ui.theme.SmallRadius
 import com.mathcore.app.viewmodel.ExamUiState
 import com.mathcore.app.viewmodel.ExamViewModel
 
@@ -90,7 +93,7 @@ fun ExamSelectionScreen(
                 title = { Text("Экзамен", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 }
             )
@@ -107,7 +110,7 @@ fun ExamSelectionScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(20.dp))
+                    .clip(RoundedCornerShape(LargeRadius))
                     .background(Brush.horizontalGradient(listOf(Color(0xFF1E3A8A), Color(0xFF7C3AED))))
                     .padding(20.dp)
             ) {
@@ -133,7 +136,7 @@ fun ExamSelectionScreen(
             }
 
             Card(
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(MediumRadius),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -164,10 +167,12 @@ private fun GradeRow(label: String, range: String, color: Color) {
 
 @Composable
 fun ExamTypeCard(type: ExamType, onClick: () -> Unit) {
+    val isDark = isSystemInDarkTheme()
     val (bg, accent) = when (type) {
-        ExamType.QUICK -> Color(0xFFFFF7ED) to Color(0xFFD97706)
-        ExamType.STANDARD -> Color(0xFFEFF6FF) to Color(0xFF2563EB)
-        ExamType.FULL -> Color(0xFFF5F3FF) to Color(0xFF7C3AED)
+        ExamType.QUICK    -> MaterialTheme.colorScheme.tertiaryContainer to MaterialTheme.colorScheme.tertiary
+        ExamType.STANDARD -> MaterialTheme.colorScheme.primaryContainer  to MaterialTheme.colorScheme.primary
+        ExamType.FULL     -> (if (isDark) Color(0xFF1A0030) else Color(0xFFF5F3FF)) to
+                             (if (isDark) Color(0xFFA78BFA) else Color(0xFF7C3AED))
     }
     val typeIcon = when (type) {
         ExamType.QUICK -> Icons.Default.FlashOn
@@ -176,7 +181,7 @@ fun ExamTypeCard(type: ExamType, onClick: () -> Unit) {
     }
     Card(
         onClick = onClick,
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(LargeRadius),
         colors = CardDefaults.cardColors(containerColor = bg),
         border = BorderStroke(1.5.dp, accent.copy(alpha = 0.3f))
     ) {
@@ -289,7 +294,7 @@ private fun ExamTopBar(state: ExamUiState, onExit: () -> Unit) {
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconButton(onClick = onExit) {
-                        Icon(Icons.Default.Close, null)
+                        Icon(Icons.Default.Close, contentDescription = "Выйти из экзамена")
                     }
                     Text(
                         "Вопрос ${state.currentIndex + 1} / ${state.questions.size}",
@@ -326,7 +331,7 @@ private fun ExamTopBar(state: ExamUiState, onExit: () -> Unit) {
 
 @Composable
 private fun ExamQuestionCard(question: Question, index: Int, total: Int) {
-    Card(shape = RoundedCornerShape(16.dp), elevation = CardDefaults.cardElevation(2.dp), modifier = Modifier.fillMaxWidth()) {
+    Card(shape = RoundedCornerShape(MediumRadius), elevation = CardDefaults.cardElevation(2.dp), modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -385,9 +390,9 @@ private fun ExamAnswerOption(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
+            .clip(RoundedCornerShape(SmallRadius))
             .background(bgColor)
-            .border(1.5.dp, borderColor, RoundedCornerShape(14.dp))
+            .border(1.5.dp, borderColor, RoundedCornerShape(SmallRadius))
             .clickable(enabled = !isAnswered, onClick = onClick)
             .padding(12.dp)
     ) {
@@ -447,7 +452,7 @@ private fun ExamBottomBar(
                     onClick = onPrevious,
                     enabled = !isFirst,
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(SmallRadius)
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(4.dp))
@@ -457,7 +462,7 @@ private fun ExamBottomBar(
                     Button(
                         onClick = onFinish,
                         modifier = Modifier.weight(2f),
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(SmallRadius),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C3AED))
                     ) {
                         Icon(Icons.Default.Check, null, modifier = Modifier.size(18.dp))
@@ -468,7 +473,7 @@ private fun ExamBottomBar(
                     Button(
                         onClick = onNext,
                         modifier = Modifier.weight(2f),
-                        shape = RoundedCornerShape(12.dp),
+                        shape = RoundedCornerShape(SmallRadius),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C3AED))
                     ) {
                         Text(if (isAnswered) "Следующий" else "Пропустить")
@@ -600,7 +605,7 @@ fun ExamResultScreen(
                 val correct = userAns == q.correct
                 val skipped = userAns == null
                 Card(
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(SmallRadius),
                     colors = CardDefaults.cardColors(
                         containerColor = when {
                             skipped -> MaterialTheme.colorScheme.surfaceVariant
@@ -660,7 +665,7 @@ fun ExamResultScreen(
             Button(
                 onClick = onRetry,
                 modifier = Modifier.fillMaxWidth().height(52.dp),
-                shape = RoundedCornerShape(14.dp),
+                shape = RoundedCornerShape(SmallRadius),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C3AED))
             ) {
                 Icon(Icons.Default.Refresh, null)
@@ -671,7 +676,7 @@ fun ExamResultScreen(
             OutlinedButton(
                 onClick = onHome,
                 modifier = Modifier.fillMaxWidth().height(52.dp),
-                shape = RoundedCornerShape(14.dp)
+                shape = RoundedCornerShape(SmallRadius)
             ) {
                 Icon(Icons.Default.Home, null)
                 Spacer(Modifier.width(8.dp))
@@ -683,7 +688,7 @@ fun ExamResultScreen(
 
 @Composable
 private fun StatCard(label: String, value: String, color: Color, modifier: Modifier = Modifier) {
-    Card(shape = RoundedCornerShape(12.dp), modifier = modifier) {
+    Card(shape = RoundedCornerShape(SmallRadius), modifier = modifier) {
         Column(
             modifier = Modifier.padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally

@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mathcore.app.data.model.PublicUserInfo
+import com.mathcore.app.ui.theme.LargeRadius
+import com.mathcore.app.ui.theme.SmallRadius
 import com.mathcore.app.util.computeXp
 import com.mathcore.app.data.model.TestResult
 
@@ -135,7 +137,7 @@ fun UserProfileScreen(
                     )
                     Spacer(Modifier.height(4.dp))
                     Surface(
-                        shape = RoundedCornerShape(20.dp),
+                        shape = RoundedCornerShape(LargeRadius),
                         color = Color(0xFF7C3AED).copy(alpha = 0.12f)
                     ) {
                         Text(
@@ -186,7 +188,7 @@ fun UserProfileScreen(
                 item {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(14.dp),
+                        shape = RoundedCornerShape(SmallRadius),
                         elevation = CardDefaults.cardElevation(2.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = Color(0xFF7C3AED).copy(alpha = 0.08f)
@@ -257,7 +259,7 @@ fun UserProfileScreen(
 private fun StatCard(label: String, value: String, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(SmallRadius),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
         Column(
@@ -284,7 +286,7 @@ private fun ResultRow(result: TestResult) {
     }
 
     Card(
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(SmallRadius),
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(1.dp)
     ) {

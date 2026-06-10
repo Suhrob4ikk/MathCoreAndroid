@@ -48,7 +48,7 @@ fun TheoryScreen(
             topBar = {
                 TopAppBar(
                     title = { Text("Теория") },
-                    navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null) } }
+                    navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад") } }
                 )
             }
         ) { padding ->

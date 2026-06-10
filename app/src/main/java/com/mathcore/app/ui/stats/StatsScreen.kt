@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mathcore.app.data.model.LeaderboardEntry
+import com.mathcore.app.ui.theme.MediumRadius
+import com.mathcore.app.ui.theme.SmallRadius
 import com.mathcore.app.util.computeXp
 
 private val sectionTabs = listOf(
@@ -141,7 +143,7 @@ fun StatsScreen(
                     if (errorMessage != null) {
                         item {
                             Card(
-                                shape = RoundedCornerShape(14.dp),
+                                shape = RoundedCornerShape(SmallRadius),
                                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
@@ -228,7 +230,7 @@ fun StatsScreen(
 @Composable
 private fun XpGuideCard(expanded: Boolean, onToggle: () -> Unit) {
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(MediumRadius),
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onToggle),
@@ -337,7 +339,7 @@ fun LeaderboardRow(
     }
 
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(MediumRadius),
         colors = CardDefaults.cardColors(containerColor = cardBg),
         elevation = CardDefaults.cardElevation(if (position <= 3) 4.dp else 1.dp),
         border = if (isCurrentUser)
@@ -438,7 +440,7 @@ fun LeaderboardRow(
             // XP badge
             Box(
                 modifier = Modifier
-                    .background(Brush.horizontalGradient(xpGradient), RoundedCornerShape(10.dp))
+                    .background(Brush.horizontalGradient(xpGradient), RoundedCornerShape(SmallRadius))
                     .padding(horizontal = 10.dp, vertical = 6.dp)
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {

@@ -27,6 +27,10 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.mathcore.app.data.model.Profile
 import com.mathcore.app.data.model.TestResult
+import com.mathcore.app.ui.theme.LargeRadius
+import com.mathcore.app.ui.theme.MediumRadius
+import com.mathcore.app.ui.theme.SmallRadius
+import com.mathcore.app.util.XP_PER_LEVEL
 import com.mathcore.app.util.computeXp
 
 private val sectionNames = mapOf(
@@ -72,8 +76,8 @@ fun ProfileScreen(
             computeXp(r.correctAnswers, r.difficulty, r.score) +
             if (r.section == "daily") 50 else 0
         }.let { dbXp -> if (dbXp > 0) dbXp else xp }   // fallback на prefs если история ещё не загружена
-    val xpLevel = displayXp / 3000 + 1              // 3000 XP на уровень — согласовано с HomeScreen
-    val xpInLevel = displayXp % 3000
+    val xpLevel = displayXp / XP_PER_LEVEL + 1
+    val xpInLevel = displayXp % XP_PER_LEVEL
 
     // Уровень по системе тестов (единая система с публичным профилем и рейтингом).
     // Дуэли исключаются — так же, как в лидерборде и веб-профиле, чтобы цифры везде совпадали.
@@ -141,7 +145,7 @@ fun ProfileScreen(
             // Профиль карточка
             item {
                 Card(
-                    shape = RoundedCornerShape(24.dp),
+                    shape = RoundedCornerShape(LargeRadius),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFF1E3A8A))
                 ) {
                     Column(
@@ -195,13 +199,13 @@ fun ProfileScreen(
                         )
                         Spacer(Modifier.height(8.dp))
                         LinearProgressIndicator(
-                            progress = { xpInLevel / 3000f },
+                            progress = { xpInLevel / XP_PER_LEVEL.toFloat() },
                             modifier = Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)),
                             color = Color(0xFF10B981),
                             trackColor = Color.White.copy(alpha = 0.2f)
                         )
                         Spacer(Modifier.height(4.dp))
-                        Text("$xpInLevel/3000 XP до следующего уровня", color = Color.White.copy(alpha = 0.8f), fontSize = 12.sp)
+                        Text("$xpInLevel/$XP_PER_LEVEL XP до следующего уровня", color = Color.White.copy(alpha = 0.8f), fontSize = 12.sp)
                     }
                 }
             }
@@ -250,6 +254,38 @@ fun ProfileScreen(
                     Text("Последние результаты", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 }
                 items(results.take(20)) { result -> ResultRow(result) }
+            } else {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.Assignment,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Spacer(Modifier.height(12.dp))
+                            Text(
+                                "Нет результатов",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                "Пройди первый тест — и результаты\nпоявятся здесь",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
             }
 
             // Settings
@@ -259,7 +295,7 @@ fun ProfileScreen(
             }
             item {
                 Card(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(MediumRadius),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     Row(
@@ -289,7 +325,7 @@ fun ProfileScreen(
 
 @Composable
 fun StatCard(icon: androidx.compose.ui.graphics.vector.ImageVector, value: String, label: String, modifier: Modifier = Modifier) {
-    Card(shape = RoundedCornerShape(16.dp),
+    Card(shape = RoundedCornerShape(MediumRadius),
          colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
          modifier = modifier) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(12.dp)) {
@@ -339,11 +375,8 @@ fun BadgesRow(badges: List<Badge>) {
 
 @Composable
 fun BadgeChip(badge: Badge) {
-    var showTooltip by remember { mutableStateOf(false) }
-
     Card(
-        onClick = { showTooltip = !showTooltip },
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(SmallRadius),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         )
@@ -383,7 +416,7 @@ fun SubjectStatsCard(results: List<TestResult>) {
     )
 
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(MediumRadius),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
         Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -449,7 +482,7 @@ fun ResultRow(result: TestResult) {
     val name = sectionNames[result.section] ?: result.section.replaceFirstChar { it.uppercase() }
     val emoji = sectionEmoji[result.section] ?: "📝"
 
-    Card(shape = RoundedCornerShape(12.dp),
+    Card(shape = RoundedCornerShape(SmallRadius),
          colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
         Row(modifier = Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(emoji, fontSize = 20.sp)

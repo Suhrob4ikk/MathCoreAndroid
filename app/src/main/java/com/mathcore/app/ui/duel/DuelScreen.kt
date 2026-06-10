@@ -27,6 +27,9 @@ import com.mathcore.app.data.Difficulty
 import com.mathcore.app.data.Question
 import com.mathcore.app.data.Subject
 import com.mathcore.app.data.model.PublicUserInfo
+import com.mathcore.app.ui.theme.LargeRadius
+import com.mathcore.app.ui.theme.MediumRadius
+import com.mathcore.app.ui.theme.SmallRadius
 import com.mathcore.app.viewmodel.DuelPhase
 import com.mathcore.app.viewmodel.DuelViewModel
 import com.mathcore.app.viewmodel.PendingInvite
@@ -157,7 +160,7 @@ fun DuelLobbyScreen(
                 title = { Text("Дуэль 1 на 1", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Назад")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -179,7 +182,7 @@ fun DuelLobbyScreen(
         ) {
             // Header card
             Card(
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(LargeRadius),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
             ) {
                 Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -256,18 +259,18 @@ fun DuelLobbyScreen(
                                     targetUsername = ""
                                     onClearSuggestions()
                                 }) {
-                                    Icon(Icons.Default.Close, null, modifier = Modifier.size(18.dp))
+                                    Icon(Icons.Default.Close, contentDescription = "Очистить", modifier = Modifier.size(18.dp))
                                 }
                             }
                         },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
+                        shape = RoundedCornerShape(SmallRadius)
                     )
                     // Autocomplete dropdown
                     if (userSuggestions.isNotEmpty()) {
                         Card(
-                            shape = RoundedCornerShape(12.dp),
+                            shape = RoundedCornerShape(SmallRadius),
                             elevation = CardDefaults.cardElevation(8.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
@@ -326,7 +329,7 @@ fun DuelLobbyScreen(
             Button(
                 onClick = { onCreateDuel(selectedSubject, selectedDiff, targetUsername.trim()) },
                 modifier = Modifier.fillMaxWidth().height(54.dp),
-                shape = RoundedCornerShape(14.dp),
+                shape = RoundedCornerShape(SmallRadius),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C3AED))
             ) {
                 Icon(Icons.Default.Add, null)
@@ -344,7 +347,7 @@ fun DuelLobbyScreen(
                 OutlinedButton(
                     onClick = { showJoin = true },
                     modifier = Modifier.fillMaxWidth().height(50.dp),
-                    shape = RoundedCornerShape(14.dp)
+                    shape = RoundedCornerShape(SmallRadius)
                 ) {
                     Icon(Icons.Default.Link, null)
                     Spacer(Modifier.width(8.dp))
@@ -352,7 +355,7 @@ fun DuelLobbyScreen(
                 }
             } else {
                 Card(
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(MediumRadius),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -363,7 +366,7 @@ fun DuelLobbyScreen(
                             label = { Text("Код (6 символов)") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(12.dp)
+                            shape = RoundedCornerShape(SmallRadius)
                         )
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             OutlinedButton(onClick = { showJoin = false }, modifier = Modifier.weight(1f)) {
@@ -402,7 +405,7 @@ fun DuelWaitingScreen(code: String, myName: String, onCancel: () -> Unit) {
         Spacer(Modifier.height(8.dp))
 
         Card(
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(MediumRadius),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
         ) {
             Column(
@@ -423,7 +426,7 @@ fun DuelWaitingScreen(code: String, myName: String, onCancel: () -> Unit) {
                         cm.setPrimaryClip(ClipData.newPlainText("duel_code", code))
                         copied = true
                     },
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(SmallRadius)
                 ) {
                     Icon(
                         if (copied) Icons.Default.Check else Icons.Default.ContentCopy,
@@ -499,7 +502,7 @@ fun DuelResultsScreen(
         Text(resultText, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = resultColor, textAlign = TextAlign.Center)
         Spacer(Modifier.height(32.dp))
 
-        Card(shape = RoundedCornerShape(20.dp), modifier = Modifier.fillMaxWidth()) {
+        Card(shape = RoundedCornerShape(LargeRadius), modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier.padding(24.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
@@ -524,7 +527,7 @@ fun DuelResultsScreen(
             onClick = onRematch,
             enabled = !rematchRequested && !timedOut,
             modifier = Modifier.fillMaxWidth().height(52.dp),
-            shape = RoundedCornerShape(14.dp),
+            shape = RoundedCornerShape(SmallRadius),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7C3AED))
         ) {
             Icon(Icons.Default.Refresh, null)
@@ -532,7 +535,7 @@ fun DuelResultsScreen(
             Text(if (rematchRequested) "Ожидаем ответа…" else "Реванш", fontWeight = FontWeight.Bold)
         }
         Spacer(Modifier.height(12.dp))
-        OutlinedButton(onClick = onHome, modifier = Modifier.fillMaxWidth().height(52.dp), shape = RoundedCornerShape(14.dp)) {
+        OutlinedButton(onClick = onHome, modifier = Modifier.fillMaxWidth().height(52.dp), shape = RoundedCornerShape(SmallRadius)) {
             Icon(Icons.Default.Home, null)
             Spacer(Modifier.width(8.dp))
             Text("Главная")
@@ -594,7 +597,7 @@ fun IncomingInviteDialog(
                 )
                 Spacer(Modifier.height(12.dp))
                 Card(
-                    shape = RoundedCornerShape(12.dp),
+                    shape = RoundedCornerShape(SmallRadius),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {

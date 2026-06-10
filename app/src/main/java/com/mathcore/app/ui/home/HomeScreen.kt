@@ -26,8 +26,13 @@ import com.mathcore.app.data.Difficulty
 import com.mathcore.app.data.QuizConfig
 import com.mathcore.app.data.Subject
 import com.mathcore.app.data.local.PreferencesManager
+import com.mathcore.app.util.XP_PER_LEVEL
+import kotlin.math.roundToInt
 import com.mathcore.app.data.model.Profile
 import com.mathcore.app.data.model.TestResult
+import com.mathcore.app.ui.theme.LargeRadius
+import com.mathcore.app.ui.theme.MediumRadius
+import com.mathcore.app.ui.theme.SmallRadius
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,38 +71,9 @@ fun HomeScreen(
         }
     }
 
-    val level = xp / 3000 + 1   // 3000 XP на уровень; согласовано с ProfileScreen
+    val level = xp / XP_PER_LEVEL + 1
 
-    Scaffold(
-        bottomBar = {
-            NavigationBar {
-                NavigationBarItem(
-                    selected = true,
-                    onClick = {},
-                    icon = { Icon(Icons.Default.Home, null) },
-                    label = { Text("Главная") }
-                )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = onStats,
-                    icon = { Icon(Icons.Default.EmojiEvents, null) },
-                    label = { Text("Рейтинг") }
-                )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = onExam,
-                    icon = { Icon(Icons.Default.School, null) },
-                    label = { Text("Экзамен") }
-                )
-                NavigationBarItem(
-                    selected = false,
-                    onClick = onProfile,
-                    icon = { Icon(Icons.Default.Person, null) },
-                    label = { Text("Профиль") }
-                )
-            }
-        }
-    ) { padding ->
+    Scaffold { padding ->
         LazyColumn(
             contentPadding = PaddingValues(bottom = 16.dp),
             modifier = Modifier.fillMaxSize().padding(padding)
@@ -206,7 +182,7 @@ fun HomeScreen(
                     Card(
                         onClick = onDuel,
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(20.dp),
+                        shape = RoundedCornerShape(LargeRadius),
                         colors = CardDefaults.cardColors(containerColor = Color(0xFF7C3AED))
                     ) {
                         Column(
@@ -223,7 +199,7 @@ fun HomeScreen(
                     Card(
                         onClick = onMistakes,
                         modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(20.dp),
+                        shape = RoundedCornerShape(LargeRadius),
                         colors = CardDefaults.cardColors(
                             containerColor = if (mistakeCount == 0) Color(0xFF374151)
                                             else Color(0xFFDC2626)
@@ -280,7 +256,7 @@ fun HomeScreen(
                 item {
                     Spacer(Modifier.height(16.dp))
                     Card(
-                        shape = RoundedCornerShape(20.dp),
+                        shape = RoundedCornerShape(LargeRadius),
                         modifier = Modifier.padding(horizontal = 16.dp)
                     ) {
                         Column(
@@ -306,7 +282,7 @@ fun HomeScreen(
                             Text("Вопросов: $questionCount", style = MaterialTheme.typography.labelMedium)
                             Slider(
                                 value = questionCount.toFloat(),
-                                onValueChange = { questionCount = it.toInt() },
+                                onValueChange = { questionCount = it.roundToInt() },
                                 valueRange = 5f..25f,
                                 steps = 3
                             )
@@ -331,7 +307,7 @@ fun HomeScreen(
                                 OutlinedButton(
                                     onClick = { selectedSubject?.let { onTheory(it) } },
                                     modifier = Modifier.weight(0.45f).height(52.dp),
-                                    shape = RoundedCornerShape(14.dp)
+                                    shape = RoundedCornerShape(SmallRadius)
                                 ) {
                                     Icon(Icons.AutoMirrored.Filled.MenuBook, null, modifier = Modifier.size(18.dp))
                                     Spacer(Modifier.width(6.dp))
@@ -344,7 +320,7 @@ fun HomeScreen(
                                         }
                                     },
                                     modifier = Modifier.weight(0.55f).height(52.dp),
-                                    shape = RoundedCornerShape(14.dp)
+                                    shape = RoundedCornerShape(SmallRadius)
                                 ) {
                                     Icon(Icons.Default.PlayArrow, null, modifier = Modifier.size(18.dp))
                                     Spacer(Modifier.width(6.dp))
@@ -370,11 +346,14 @@ fun DailyChallengeCard(
     onShowLeaderboard: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val dailyBg    = if (completed) MaterialTheme.colorScheme.secondaryContainer
+                     else MaterialTheme.colorScheme.tertiaryContainer
+    val dailyOnBg  = if (completed) MaterialTheme.colorScheme.onSecondaryContainer
+                     else MaterialTheme.colorScheme.onTertiaryContainer
+
     Card(
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (completed) Color(0xFFDCFCE7) else Color(0xFFFFFBEB)
-        ),
+        shape = RoundedCornerShape(LargeRadius),
+        colors = CardDefaults.cardColors(containerColor = dailyBg),
         modifier = modifier.fillMaxWidth()
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -382,7 +361,7 @@ fun DailyChallengeCard(
                 Icon(
                     if (completed) Icons.Default.CheckCircle else Icons.Default.DateRange,
                     null,
-                    tint = if (completed) Color(0xFF15803D) else Color(0xFF92400E),
+                    tint = dailyOnBg,
                     modifier = Modifier.size(36.dp)
                 )
                 Spacer(Modifier.width(12.dp))
@@ -390,19 +369,22 @@ fun DailyChallengeCard(
                     Text(
                         "Ежедневный вызов",
                         fontWeight = FontWeight.Bold,
-                        color = if (completed) Color(0xFF15803D) else Color(0xFF92400E)
+                        color = dailyOnBg
                     )
                     Text(
                         if (completed) "Выполнено! Результат: $score%" else "10 вопросов из всех разделов",
                         fontSize = 12.sp,
-                        color = if (completed) Color(0xFF166534) else Color(0xFF78350F)
+                        color = dailyOnBg.copy(alpha = 0.8f)
                     )
                 }
                 if (!completed) {
                     Button(
                         onClick = onStart,
-                        shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD97706))
+                        shape = RoundedCornerShape(SmallRadius),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary,
+                            contentColor = MaterialTheme.colorScheme.onTertiary
+                        )
                     ) { Text("Начать", fontWeight = FontWeight.Bold) }
                 }
             }
@@ -413,15 +395,14 @@ fun DailyChallengeCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    val timerColor = if (completed) Color(0xFF166534) else Color(0xFF78350F)
-                    Icon(Icons.Default.Timer, null, tint = timerColor, modifier = Modifier.size(12.dp))
+                    Icon(Icons.Default.Timer, null, tint = dailyOnBg, modifier = Modifier.size(12.dp))
                     Spacer(Modifier.width(3.dp))
                     Text(
                         "Следующий через %02d:%02d:%02d".format(
                             countdown / 3600, (countdown % 3600) / 60, countdown % 60
                         ),
                         fontSize = 11.sp,
-                        color = timerColor
+                        color = dailyOnBg
                     )
                 }
                 TextButton(
@@ -429,7 +410,7 @@ fun DailyChallengeCard(
                     contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp, vertical = 0.dp)
                 ) {
                     Text("Лидеры дня", fontSize = 12.sp,
-                        color = Color(0xFFD97706), fontWeight = FontWeight.Medium)
+                        color = MaterialTheme.colorScheme.tertiary, fontWeight = FontWeight.Medium)
                 }
             }
         }
@@ -449,7 +430,7 @@ fun SubjectCard(
     Card(
         onClick = onClick,
         modifier = modifier.height(96.dp),
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(MediumRadius),
         colors = CardDefaults.cardColors(containerColor = bgColor),
         elevation = CardDefaults.cardElevation(if (isSelected) 6.dp else 1.dp)
     ) {
